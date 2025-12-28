@@ -1,0 +1,1 @@
+Spatial extension of MemER paper. Imbuing robot policies with a notion of space.
