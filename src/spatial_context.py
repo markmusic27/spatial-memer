@@ -14,29 +14,36 @@ class SpatialContext:
         self.keyframe_poses = {}
         self.recent_poses = {}
 
-    def add_keyframe(self, state, pose: np.darray = None):
+    def add_keyframe(self, robot_state, pose: np.darray = None):
         """
         Compute and store pose for keyframe.
 
         Args:
-            state: The state of the robot at the keyframe (defined as q_t in MemER paper)
+            robot_state: The state of the robot at the keyframe (defined as q_t in MemER paper)
             pose: The pose of the robot arm in world frame (when relocalization is True)
         """
+        if pose is None:
+            pose = np.eye(4) # default pose is the identity
+
+        
         pass
 
-    def add_recent_frame(self, state, pose: np.darray = None):
+    def add_recent_frame(self, robot_state, pose: np.darray = None):
         """
         Compute and store pose for recent frame. Capped at cutoff frames.
 
         Args:
-            state: The state of the robot at the keyframe (defined as q_t in MemER paper)
+            robot_state: The state of the robot at the keyframe (defined as q_t in MemER paper)
             pose: The pose of the robot arm in world frame (when relocalization is True)
         """
+        if pose is None:
+            pose = np.eye(4) # default pose is the identity
         pass
 
     def generate_map(self):
         """
         Returns the egocentric BEV map for the current state of the robot.
         """
+        
         pass
     
