@@ -30,5 +30,32 @@ class PoseUtils:
         # run forward kinematics
         mujoco.mj_forward(self.model, self.data)
 
+        # extract the end-effector pose from the library
+        ee_body_name = "fr3v2_link8"
+        ee_body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, ee_body_name)
+
+        if ee_body_id == -1:
+            raise ValueError(f"Body {ee_body_name} not found")
+
+        pos = self.data.xpos[ee_body_id].copy() # (3, )
+        R = self.data.xmat[ee_body_id].reshape(3, 3).copy() # (3, 3)
+
+        # concat into SE(3) transform matrix
+        T = np.eye(4)
+        T[:3, :3] = R
+        T[:3, 3] = pos
+
+        return T
+
+
+
+
+
+
+
+        
+
+
+
 
 
