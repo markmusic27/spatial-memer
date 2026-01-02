@@ -22,6 +22,8 @@ def test_forward_kinematics():
     joint_angles = np.zeros(7)
     transform = pose_utils.forward_kinematics(joint_angles)
 
+    print(transform)
+
 if __name__ == "__main__":
     test_forward_kinematics()
 
