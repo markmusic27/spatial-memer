@@ -24,9 +24,10 @@ class SpatialContext:
         """
         if pose is None:
             pose = np.eye(4) # default pose is the identity
+        else:
+            # TODO: implement relocalization function
+            pass
 
-        
-        pass
 
     def add_recent_frame(self, robot_state, pose: np.darray = None):
         """
@@ -38,7 +39,9 @@ class SpatialContext:
         """
         if pose is None:
             pose = np.eye(4) # default pose is the identity
-        pass
+        else:
+            # TODO: implement relocalization function
+            pass
 
     def generate_map(self):
         """
