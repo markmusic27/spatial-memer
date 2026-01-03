@@ -1,9 +1,11 @@
 import mujoco
 import numpy as np
 
+from transforms import transform_inverse, transform_is_valid
+
 FR3_DEFINITION_PATH = "fr3v2/fr3v2.xml"
 
-class PoseUtils:
+class RobotArm:
     def __init__(self):
         self.model = mujoco.MjModel.from_xml_path(str(FR3_DEFINITION_PATH))
         self.data = mujoco.MjData(self.model)

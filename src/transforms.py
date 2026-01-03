@@ -1,5 +1,26 @@
 import numpy as np
 
+def compute_relative_pose(a: np.ndarray, b: np.ndarray):
+        """
+        Given two poses in the same frame, this algorithm returns the pose of b in the frame of a (aTb)
+
+        Args:
+            a: SE(3) matrix wTa
+            b: SE(3) matrix wTb
+        
+        Returns:
+            c: SE(3) matrix aTb
+        """
+        if not transform_is_valid(a):
+            raise ValueError(f"Pose {a} is invalid")
+        
+        if not transform_is_valid(b):
+            raise ValueError(f"Pose {b} is invalid")
+
+        a_inv = transform_inverse(a)
+
+        return a_inv @ b
+
 def transform_is_valid(t: np.ndarray, tolerance: float = 1e-3) -> bool:
     """Check if array is a valid transform.
 
