@@ -13,11 +13,11 @@ It is responsible for:
 """
 
 class SpatialContext:
-    def __init__(self, relocalization=False, max_frames_in_map: int = 10, image_size: int = 256, border_size: int = 8):
+    def __init__(self, relocalization=False, image_size: int = 256, border_size: int = 8, outlier_std_threshold: int = 5):
         self.relocalization = relocalization
-        self.max_frames_in_map = max_frames_in_map
         self.image_size = image_size
         self.border_size = border_size
+        self.outlier_std_threshold = outlier_std_threshold
         
         # maps frame_id to SE(3) pose
         self.keyframe_poses: dict[int, np.ndarray] = {}
@@ -74,15 +74,6 @@ class SpatialContext:
             return np.eye(4)
         latest_id = max(self.all_poses.keys())
         return self.all_poses[latest_id]
-
-    def get_recent_poses(self, n: int) -> list[tuple[int, np.ndarray]]:
-        """Get the last N poses."""
-        if n > len(self.all_poses):
-            n = len(self.all_poses)
-
-        recent_ids = sorted(self.all_poses.keys())[-n:]
-
-        return [(fid, self.all_poses[fid]) for fid in recent_ids]
 
 
     # def generate_watermarked_keyframes(): # TODO: Implement this later
@@ -158,6 +149,43 @@ class SpatialContext:
         scale = self._compute_scale(max_inlier_dist)
         
         return positions, scale, outlier_ids
+
+    def _generate_colors(self, n: int) -> list[tuple[int, int, int]]:
+        """Generate N distinct colors using HSV color space."""
+        import cv2
+        
+        if n == 0:
+            return []
+        
+        colors = []
+        for i in range(n):
+            hue = int(180 * i / n)  # opencv hue range is 0-180
+            hsv = np.uint8([[[hue, 200, 230]]])
+            rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)[0, 0]
+            colors.append(tuple(map(int, rgb)))
+        
+        return colors
+
+    def generate_map(self) -> np.ndarray:
+        """
+        Generate egocentric BEV map showing current position and keyframes.
+        
+        Returns:
+            RGB image (H, W, 3) uint8
+        """
+        import cv2
+
+        current_pose = self.get_current_pose()
+        positions, scale, outlier_ids = self._compute_map_layout(current_pose)
+
+        canvas_size = self.image_size - 2 * self.border_size
+        canvas = np.full((canvas_size, canvas_size, 3), 255, dtype=np.uint8)
+        center = canvas_size // 2
+
+        print(center)
+        print(canvas_size)
+
+    
 
 
 
