@@ -1,7 +1,9 @@
+from dataclasses import dataclass
+import math
 import numpy as np
 
 from robot_arm import RobotArm
-from transforms import compute_relative_pose
+from transforms import compute_relative_pose, extract_displacement
 
 """
 SpatialContext is the main class that directly interfaces with the MemER high-level policy.
@@ -10,12 +12,12 @@ It is responsible for:
     (2) Generating the egocentric BEV map thats fed to the pi-high policy
 """
 
-IMAGE_SIZE = 256
-
 class SpatialContext:
-    def __init__(self, relocalization=False, max_frames_in_map: int = 10):
+    def __init__(self, relocalization=False, max_frames_in_map: int = 10, image_size: int = 256, border_size: int = 8):
         self.relocalization = relocalization
         self.max_frames_in_map = max_frames_in_map
+        self.image_size = image_size
+        self.border_size = border_size
         
         # maps frame_id to SE(3) pose
         self.keyframe_poses: dict[int, np.ndarray] = {}
@@ -86,26 +88,78 @@ class SpatialContext:
     # def generate_watermarked_keyframes(): # TODO: Implement this later
     #     pass
 
-    def generate_map(self):
+    def _compute_scale(self, max_dist: float, margin: int = 10) -> float:
         """
-        Generate egocentric BEV map.
-
+        Compute pixels per meter so max_dist fits within canvas.
+        
+        Args:
+            max_dist: Maximum distance to fit (meters)
+            margin: Pixels to leave at edge of canvas
+        
         Returns:
-            RGB image (H, W, 3) uint8
+            scale: pixels per meter
         """
+        canvas_size = self.image_size - (2 * self.border_size)
+        usable_radius = (canvas_size / 2) - margin
+        
+        if max_dist < 1e-6:
+            return 50.0  # Default scale when all points at origin
+        
+        return usable_radius / max_dist
 
-        current_pose = self.get_current_pose()
-        recent_poses = self.get_recent_poses(self.max_frames_in_map)
-        keyframe_poses = self.keyframe_poses
+    def _compute_map_layout(self, current_pose: np.ndarray) -> tuple[dict, float, set]:
+        """
+        Compute relative XY positions and determine scale + outliers.
+        
+        Returns:
+            positions: dict[frame_id, (x, y)] for keyframes
+            scale: pixels per meter
+            outlier_ids: set of frame_ids that are outliers
+        """
+        positions = {}
+        
+        for frame_id, pose in self.keyframe_poses.items():
+            rel_pose = compute_relative_pose(current_pose, pose)
+            x, y = extract_displacement(rel_pose)[:-1]
+            positions[frame_id] = (x, y)
+        
+        if len(positions) == 0:
+            return {}, 50.0, set()
+        
+        # compute distances
+        distances = {fid: np.sqrt(x**2 + y**2) for fid, (x, y) in positions.items()}
+        dist_values = list(distances.values())
+        
+        MIN_SAMPLES_FOR_OUTLIER = 5
+        
+        if len(dist_values) < MIN_SAMPLES_FOR_OUTLIER:
+            max_dist = max(dist_values) if dist_values else 1.0
+            scale = self._compute_scale(max_dist)
+            return positions, scale, set()
+        
+        # compute statistics
+        mean_dist = np.mean(dist_values)
+        std_dist = np.std(dist_values)
+        
+        if std_dist < 1e-6:
+            scale = self._compute_scale(max(dist_values))
+            return positions, scale, set()
+        
+        # threshold for outliers
+        threshold = mean_dist + self.outlier_std_threshold * std_dist
+        
+        # identify outliers
+        outlier_ids = {fid for fid, d in distances.items() if d > threshold}
+        
+        # scale based on inliers
+        inlier_distances = [d for fid, d in distances.items() if fid not in outlier_ids]
+        max_inlier_dist = max(inlier_distances) if inlier_distances else max(dist_values)
+        
+        scale = self._compute_scale(max_inlier_dist)
+        
+        return positions, scale, outlier_ids
 
-        img = np.full((IMAGE_SIZE, IMAGE_SIZE, 3), 255, dtype=np.uint8)
-        center = IMAGE_SIZE // 2
 
-        # Draw recent trajectory
-        for fid, pose in recent_poses:
-            # compute relative pose (egocentric, origin at current frame)
-            relative_pose = compute_relative_pose(current_pose, pose)
-            print(relative_pose)
 
 
 

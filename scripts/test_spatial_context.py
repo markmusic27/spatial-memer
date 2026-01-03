@@ -19,13 +19,13 @@ def main():
     for i, joints in enumerate(joint_states):
         fid = ctx.add_frame(joints)
         frame_ids.append(fid)
-        print(f"Added frame {fid}")
+        # print(f"Added frame {fid}")
 
     # Promote two random frames to keyframes
     promoted = random.sample(frame_ids, 2)
     for fid in promoted:
         ctx.promote_to_keyframe(fid)
-        print(f"Promoted frame {fid} to keyframe")
+        # print(f"Promoted frame {fid} to keyframe")
 
     img = ctx.generate_map()
 

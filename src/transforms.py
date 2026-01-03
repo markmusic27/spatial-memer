@@ -1,5 +1,15 @@
 import numpy as np
 
+def extract_displacement(T: np.ndarray):
+    """
+    Given a transformation matrix, extract the (x,y,z) points
+    """
+
+    if not transform_is_valid(T):
+            raise ValueError(f"Transformation {T} is invalid")
+
+    return T[:-1, -1]
+
 def compute_relative_pose(a: np.ndarray, b: np.ndarray):
         """
         Given two poses in the same frame, this algorithm returns the pose of b in the frame of a (aTb)
