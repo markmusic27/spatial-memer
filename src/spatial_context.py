@@ -255,10 +255,11 @@ class SpatialContext:
         keyframe_ids = list(self.keyframe_poses.keys())
 
         # track colors that were used for each keyframe
-        colors = {}
+        colors: dict[int, tuple[int, int, int]] = {}
         
         for i, frame_id in enumerate(keyframe_ids):
             color = self._get_keyframe_color(i)
+            colors[frame_id] = color
             x, y = positions[frame_id]
             
             px = center + int(x * scale)
@@ -301,7 +302,7 @@ class SpatialContext:
         cv2.arrowedLine(image, (center, center + 3), (center, center - 30),
                         (0, 0, 0), 2, tipLength=0.3)
         
-        return image
+        return image, colors
 
 
     

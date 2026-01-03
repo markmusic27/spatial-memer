@@ -30,7 +30,9 @@ def main():
     for fid in frame_ids:
         ctx.promote_to_keyframe(fid)
 
-    img = ctx.generate_map()
+    img, colors = ctx.generate_map()
+
+    print(colors)
 
     # Display the map
     cv2.imshow("Spatial Map", img)
