@@ -248,11 +248,14 @@ class SpatialContext:
         
         center = cfg.image_size // 2
         
-        # Track placed circles: (x, y, radius)
+        # track placed circles: (x, y, radius)
         placed_circles: list[tuple[int, int, int]] = [(center, center, cfg.robot_radius)]
         
-        # Draw keyframes
+        # draw keyframes
         keyframe_ids = list(self.keyframe_poses.keys())
+
+        # track colors that were used for each keyframe
+        colors = {}
         
         for i, frame_id in enumerate(keyframe_ids):
             color = self._get_keyframe_color(i)
@@ -261,28 +264,28 @@ class SpatialContext:
             px = center + int(x * scale)
             py = center - int(y * scale)
             
-            # Clamp to border edge
+            # clamp to border edge
             px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             
-            # Resolve overlaps with robot and other keyframes
+            # resolve overlaps with robot and other keyframes
             px, py = self._resolve_overlap(px, py, placed_circles, cfg.keyframe_radius)
             
-            # Clamp again after adjustment
+            # clamp again after adjustment
             px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             
-            # Add to placed circles
+            # add to placed circles
             placed_circles.append((px, py, cfg.keyframe_radius))
             
-            # Draw marker (square)
+            # draw marker (square)
             half = cfg.keyframe_radius
             top_left = (px - half, py - half)
             bottom_right = (px + half, py + half)
             cv2.rectangle(image, top_left, bottom_right, color, -1)
             cv2.rectangle(image, top_left, bottom_right, (0, 0, 0), cfg.circle_border_size)
             
-            # Draw label
+            # draw label
             label = str(i + 1)
             text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, 1)[0]
             text_x = px - text_size[0] // 2
@@ -292,7 +295,7 @@ class SpatialContext:
             cv2.putText(image, label, (text_x, text_y - 1),
                         cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
         
-        # Draw robot at center
+        # draw robot at center
         cv2.circle(image, (center, center), cfg.robot_radius, (180, 180, 180), -1)
         cv2.circle(image, (center, center), cfg.robot_radius, (100, 100, 100), cfg.circle_border_size)
         cv2.arrowedLine(image, (center, center + 3), (center, center - 30),
