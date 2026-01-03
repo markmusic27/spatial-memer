@@ -182,8 +182,11 @@ class SpatialContext:
         canvas = np.full((canvas_size, canvas_size, 3), 255, dtype=np.uint8)
         center = canvas_size // 2
 
-        print(center)
-        print(canvas_size)
+        # generate colors
+        keyframe_ids = list(self.keyframe_poses.keys())
+        colors = self._generate_colors(len(keyframe_ids))
+
+        print(colors)
 
     
 
