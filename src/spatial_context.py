@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import math
 import numpy as np
+import cv2
 
 from robot_arm import RobotArm
 from transforms import compute_relative_pose, extract_displacement
@@ -12,12 +13,25 @@ It is responsible for:
     (2) Generating the egocentric BEV map thats fed to the pi-high policy
 """
 
+@dataclass
+class MapConfig:
+    """Configuration for BEV map generation."""
+    image_size: int = 512
+    border_size: int = 4
+    outlier_std_threshold: float = 2
+    keyframe_radius: int = 16
+    robot_radius: int = 18
+    circle_border_size: int = 1
+    font_scale: float = 0.6
+
+
+DEFAULT_MAP_CONFIG = MapConfig()
+
+
 class SpatialContext:
-    def __init__(self, relocalization=False, image_size: int = 256, border_size: int = 8, outlier_std_threshold: int = 5):
+    def __init__(self, relocalization: bool = False, map_config: MapConfig = None):
         self.relocalization = relocalization
-        self.image_size = image_size
-        self.border_size = border_size
-        self.outlier_std_threshold = outlier_std_threshold
+        self.map_config = map_config or DEFAULT_MAP_CONFIG
         
         # maps frame_id to SE(3) pose
         self.keyframe_poses: dict[int, np.ndarray] = {}
@@ -90,7 +104,8 @@ class SpatialContext:
         Returns:
             scale: pixels per meter
         """
-        canvas_size = self.image_size - (2 * self.border_size)
+        cfg = self.map_config
+        canvas_size = cfg.image_size - (2 * cfg.border_size)
         usable_radius = (canvas_size / 2) - margin
         
         if max_dist < 1e-6:
@@ -137,7 +152,7 @@ class SpatialContext:
             return positions, scale, set()
         
         # threshold for outliers
-        threshold = mean_dist + self.outlier_std_threshold * std_dist
+        threshold = mean_dist + self.map_config.outlier_std_threshold * std_dist
         
         # identify outliers
         outlier_ids = {fid for fid, d in distances.items() if d > threshold}
@@ -150,21 +165,72 @@ class SpatialContext:
         
         return positions, scale, outlier_ids
 
-    def _generate_colors(self, n: int) -> list[tuple[int, int, int]]:
-        """Generate N distinct colors using HSV color space."""
-        import cv2
+    def _get_keyframe_color(self, index: int) -> tuple[int, int, int]:
+        """
+        Get color for keyframe by index (cycles through 8 colors).
+        Colors are OpenCV BGR and lightly whitewashed for readability.
+        """
+
+        # Saturated base colors (BGR for OpenCV)
+        base_colors = [
+            ( 25,  25, 230),  # red
+            ( 60, 180,  75),  # green
+            (200, 130,   0),  # blue
+            ( 48, 130, 245),  # orange
+            (180,  30, 145),  # purple
+            (240, 240,  70),  # cyan
+            (230,  50, 240),  # magenta
+            ( 60, 245, 210),  # yellow
+        ]
+
+        WHITEWASH = 0.45  # ↓ reduce if you want stronger colors
+
+        b, g, r = base_colors[index % len(base_colors)]
+
+        return (
+            int(b + (255 - b) * WHITEWASH),
+            int(g + (255 - g) * WHITEWASH),
+            int(r + (255 - r) * WHITEWASH),
+        )
+
+
+    def _resolve_overlap(self, px: int, py: int, placed: list[tuple[int, int, int]], radius: int = 10) -> tuple[int, int]:
+        """
+        Resolve overlap by finding a nearby free position.
         
-        if n == 0:
-            return []
+        Args:
+            px, py: Initial position
+            placed: List of (x, y, radius) for already placed circles
+            radius: Radius of circle to place
+            
+        Returns:
+            (px, py): Adjusted position that doesn't overlap
+        """
+        def has_collision(x: int, y: int) -> bool:
+            for ox, oy, oradius in placed:
+                dist = math.sqrt((x - ox)**2 + (y - oy)**2)
+                min_dist = radius + oradius  # touching (no gap)
+                if dist < min_dist:
+                    return True
+            return False
         
-        colors = []
-        for i in range(n):
-            hue = int(180 * i / n)  # opencv hue range is 0-180
-            hsv = np.uint8([[[hue, 200, 230]]])
-            rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)[0, 0]
-            colors.append(tuple(map(int, rgb)))
+        if not has_collision(px, py):
+            return px, py
         
-        return colors
+        # Spiral outward to find free position
+        step = radius
+        for ring in range(1, 10):  # Try up to 10 rings out
+            dist = ring * step
+            num_points = max(8, ring * 8)  # More points for larger rings
+            for i in range(num_points):
+                angle = (2 * math.pi * i) / num_points
+                nx = px + int(dist * math.cos(angle))
+                ny = py + int(dist * math.sin(angle))
+                if not has_collision(nx, ny):
+                    return nx, ny
+        
+        # Fallback: just offset to the right
+        return px + radius * 3, py
 
     def generate_map(self) -> np.ndarray:
         """
@@ -173,20 +239,67 @@ class SpatialContext:
         Returns:
             RGB image (H, W, 3) uint8
         """
-        import cv2
-
+        cfg = self.map_config
         current_pose = self.get_current_pose()
         positions, scale, outlier_ids = self._compute_map_layout(current_pose)
-
-        canvas_size = self.image_size - 2 * self.border_size
-        canvas = np.full((canvas_size, canvas_size, 3), 255, dtype=np.uint8)
-        center = canvas_size // 2
-
-        # generate colors
+        
+        # Create white canvas
+        image = np.full((cfg.image_size, cfg.image_size, 3), 255, dtype=np.uint8)
+        
+        center = cfg.image_size // 2
+        
+        # Track placed circles: (x, y, radius)
+        placed_circles: list[tuple[int, int, int]] = [(center, center, cfg.robot_radius)]
+        
+        # Draw keyframes
         keyframe_ids = list(self.keyframe_poses.keys())
-        colors = self._generate_colors(len(keyframe_ids))
+        
+        for i, frame_id in enumerate(keyframe_ids):
+            color = self._get_keyframe_color(i)
+            x, y = positions[frame_id]
+            
+            px = center + int(x * scale)
+            py = center - int(y * scale)
+            
+            # Clamp to border edge
+            px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+            py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+            
+            # Resolve overlaps with robot and other keyframes
+            px, py = self._resolve_overlap(px, py, placed_circles, cfg.keyframe_radius)
+            
+            # Clamp again after adjustment
+            px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+            py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+            
+            # Add to placed circles
+            placed_circles.append((px, py, cfg.keyframe_radius))
+            
+            # Draw marker (square)
+            half = cfg.keyframe_radius
+            top_left = (px - half, py - half)
+            bottom_right = (px + half, py + half)
+            cv2.rectangle(image, top_left, bottom_right, color, -1)
+            cv2.rectangle(image, top_left, bottom_right, (0, 0, 0), cfg.circle_border_size)
+            
+            # Draw label
+            label = str(i + 1)
+            text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, 1)[0]
+            text_x = px - text_size[0] // 2
+            text_y = py + text_size[1] // 2
+            cv2.putText(image, label, (text_x-1, text_y - 1),
+                        cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, label, (text_x, text_y - 1),
+                        cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+        
+        # Draw robot at center
+        cv2.circle(image, (center, center), cfg.robot_radius, (180, 180, 180), -1)
+        cv2.circle(image, (center, center), cfg.robot_radius, (100, 100, 100), cfg.circle_border_size)
+        cv2.arrowedLine(image, (center, center + 3), (center, center - 30),
+                        (0, 0, 0), 2, tipLength=0.3)
+        
+        return image
 
-        print(colors)
 
     
 

@@ -3,6 +3,7 @@ import random
 import sys
 sys.path.insert(0, "src")
 
+import cv2
 from spatial_context import SpatialContext
 
 def main():
@@ -29,6 +30,10 @@ def main():
 
     img = ctx.generate_map()
 
+    # Display the map
+    cv2.imshow("Spatial Map", img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     # print(f"\nAll poses: {list(ctx.all_poses.keys())}")
     # print(f"Keyframes: {list(ctx.keyframe_poses.keys())}")
