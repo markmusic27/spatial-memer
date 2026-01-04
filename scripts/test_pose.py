@@ -10,18 +10,18 @@ import os
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from pose import PoseUtils
+from robot_arm import RobotArm
 
 def test_forward_kinematics():
     """Test forward kinematics with various joint configurations."""
     
-    pose_utils = PoseUtils()
+    arm = RobotArm()
     
     # Test 1: Zero configuration (all joints at 0)
     print("Test 1: Zero configuration (all joints at 0)")
     print("=" * 60)
     joint_angles = np.zeros(7)
-    transform = pose_utils.forward_kinematics(joint_angles)
+    transform = arm.forward_kinematics(joint_angles)
     print(f"Joint angles: {joint_angles}")
     print(f"End-effector position: {transform[:3, 3]}")
     print(f"Transformation matrix:\n{transform}\n")
@@ -30,7 +30,7 @@ def test_forward_kinematics():
     print("Test 2: Non-zero configuration")
     print("=" * 60)
     joint_angles = np.array([0.5, -0.3, 0.7, -1.2, 0.4, 1.0, -0.6])
-    transform = pose_utils.forward_kinematics(joint_angles)
+    transform = arm.forward_kinematics(joint_angles)
     print(f"Joint angles: {joint_angles}")
     print(f"End-effector position: {transform[:3, 3]}")
     print(f"Transformation matrix:\n{transform}\n")
@@ -39,7 +39,7 @@ def test_forward_kinematics():
     print("Test 3: Validate SE(3) transformation matrix properties")
     print("=" * 60)
     joint_angles = np.array([0.2, -0.5, 0.8, -0.9, 0.3, 0.6, -0.4])
-    transform = pose_utils.forward_kinematics(joint_angles)
+    transform = arm.forward_kinematics(joint_angles)
     
     R = transform[:3, :3]  # Rotation matrix
     t = transform[:3, 3]   # Translation vector

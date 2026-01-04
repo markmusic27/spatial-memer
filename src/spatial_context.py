@@ -90,8 +90,54 @@ class SpatialContext:
         return self.all_poses[latest_id]
 
 
-    # def generate_watermarked_keyframes(): # TODO: Implement this later
-    #     pass
+    def watermark_keyframes(self, keyframes: list[tuple[int, np.ndarray]], colors: dict[int, tuple[int, int, int]]) -> list[np.ndarray]:
+        """
+        Watermarks the keyframes such that they match the map colors.
+
+        Args:
+            keyframes: list of (frame_id, keyframe_image) pairs
+            colors: dictionary mapping frame_id to color
+
+        Returns:
+            list[np.ndarray] of H,W,3 watermarked images
+        """
+        cfg = self.map_config
+        padding = 10
+        size = cfg.keyframe_radius * 3  # square size matches map markers
+        
+        watermarked = []
+        
+        for idx, (fid, keyframe) in enumerate(keyframes):
+            if fid not in colors:
+                raise ValueError(f"Color for frame_id {fid} was not found")
+            
+            color = colors[fid]
+            
+            # copy to avoid modifying original
+            img = keyframe.copy()
+            
+            # draw square in top-left with padding
+            top_left = (padding, padding)
+            bottom_right = (padding + size, padding + size)
+            cv2.rectangle(img, top_left, bottom_right, color, -1)
+            cv2.rectangle(img, top_left, bottom_right, (0, 0, 0), cfg.circle_border_size)
+            
+            # draw label (1-indexed)
+            label = str(idx + 1)
+            font_scale = cfg.font_scale * 1.33
+            text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 1)[0]
+            text_x = padding + (size - text_size[0]) // 2
+            text_y = padding + (size + text_size[1]) // 2
+
+            # add text twice for boldness
+            cv2.putText(img, label, (text_x + 1, text_y - 1),
+                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(img, label, (text_x, text_y - 1),
+                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+            
+            watermarked.append(img)
+        
+        return watermarked
 
     def _compute_scale(self, max_dist: float, margin: int = 10) -> float:
         """
@@ -238,6 +284,7 @@ class SpatialContext:
         
         Returns:
             RGB image (H, W, 3) uint8
+            Color Dictionary (maps fid to color) dict[int, tuple[int, int, int]]
         """
         cfg = self.map_config
         current_pose = self.get_current_pose()
@@ -291,6 +338,8 @@ class SpatialContext:
             text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, 1)[0]
             text_x = px - text_size[0] // 2
             text_y = py + text_size[1] // 2
+
+            # added twice for bold
             cv2.putText(image, label, (text_x-1, text_y - 1),
                         cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(image, label, (text_x, text_y - 1),

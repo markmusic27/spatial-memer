@@ -30,12 +30,18 @@ def main():
     for fid in frame_ids:
         ctx.promote_to_keyframe(fid)
 
-    img, colors = ctx.generate_map()
+    map, colors = ctx.generate_map()
 
-    print(colors)
+    keyframe = cv2.imread("assets/example_keyframe.png")
 
-    # Display the map
-    cv2.imshow("Spatial Map", img)
+    watermarked = ctx.watermark_keyframes([(i, keyframe) for i in range(8)], colors)
+
+    # Resize map to match keyframe height for side-by-side display
+    kf_h, kf_w = watermarked[0].shape[:2]
+    map_resized = cv2.resize(map, (kf_h, kf_h))  # square map scaled to keyframe height
+    
+    combined = np.hstack([watermarked[0], map_resized])
+    cv2.imshow("Keyframe + Map", combined)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
