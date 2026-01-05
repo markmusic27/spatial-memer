@@ -4,6 +4,12 @@ Spatial extension of MemER paper. Imbuing robot policies with a notion of space.
 
 ## Installation
 
+### Python Dependencies
+
+```bash
+uv sync
+```
+
 ### DPVO (Visual Odometry)
 
 DPVO is used for camera localization. It requires an NVIDIA GPU with CUDA.
@@ -15,6 +21,25 @@ DPVO is used for camera localization. It requires an NVIDIA GPU with CUDA.
 # To test downloads only (no CUDA required)
 ./scripts/setup_dpvo.sh --download-only
 ```
+
+#### Test DPVO
+
+Run on the included example video to verify everything works:
+
+```bash
+cd external/DPVO
+python demo.py \
+    --imagedir=../../assets/home_example.mp4 \
+    --calib=calib/iphone.txt \
+    --stride=5 \
+    --plot \
+    --save_trajectory \
+    --name=home_example
+```
+
+Results saved to:
+- `external/DPVO/saved_trajectories/home_example.txt` - camera poses (TUM format)
+- `external/DPVO/trajectory_plots/home_example.pdf` - trajectory visualization
 
 ## Example Flow
 

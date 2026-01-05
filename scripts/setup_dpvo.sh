@@ -63,7 +63,9 @@ pip install .
 # Download model weights if not present
 if [ ! -f "dpvo.pth" ]; then
     echo "Downloading model weights..."
-    ./download_models_and_data.sh
+    wget -q --show-progress https://www.dropbox.com/s/nap0u8zslspdwm4/models.zip
+    unzip -o models.zip
+    rm -f models.zip
 else
     echo "Model weights already downloaded"
 fi
