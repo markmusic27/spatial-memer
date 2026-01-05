@@ -1,0 +1,3 @@
+[submodule "external/DPVO"]
+	path = external/DPVO
+	url = https://github.com/princeton-vl/DPVO.git
