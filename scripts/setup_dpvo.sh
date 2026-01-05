@@ -52,6 +52,10 @@ else
     echo "WARNING: patch_dpvo.sh not found, skipping patches"
 fi
 
+# Install DPVO dependencies
+echo "Installing DPVO dependencies..."
+pip install torch_scatter einops numba tqdm pypose kornia plyfile evo opencv-python yacs
+
 # Install DPVO
 echo "Installing DPVO..."
 pip install .
