@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-"""
-Test script for Franka FR3 forward kinematics.
-"""
-
 import numpy as np
 import sys
 import os

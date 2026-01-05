@@ -11,3 +11,7 @@ wheels/
 
 # macOS files
 .DS_Store
+
+# DPVO (cloned and installed on cloud only)
+external/DPVO/
+
