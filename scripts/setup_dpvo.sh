@@ -43,6 +43,15 @@ if ! command -v nvcc &> /dev/null; then
     exit 1
 fi
 
+# Apply PyTorch 2.x compatibility patches
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/patch_dpvo.sh" ]; then
+    echo "Applying PyTorch compatibility patches..."
+    bash "$SCRIPT_DIR/patch_dpvo.sh" "$(pwd)"
+else
+    echo "WARNING: patch_dpvo.sh not found, skipping patches"
+fi
+
 # Install DPVO
 echo "Installing DPVO..."
 pip install .

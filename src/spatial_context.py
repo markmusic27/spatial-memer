@@ -44,7 +44,11 @@ class SpatialContext:
         self.robot_arm = RobotArm()
 
     def _compute_pose(self, robot_state, robot_pose: np.ndarray = None) -> np.ndarray:
-        """Compute world-frame camera pose from robot state."""
+        """
+        Compute world-frame camera pose from robot state.
+
+        Note that the robot_pose origin must the base of the robot arm.
+        """
         if robot_pose is None:
             robot_pose = np.eye(4)
 
