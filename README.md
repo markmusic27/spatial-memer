@@ -1,6 +1,6 @@
-# `Spatial-MemER`
-
 <div align="center">
+
+# `Spatial-MemER`
 
 ### Spatial Memory for Embodied Robots
 
