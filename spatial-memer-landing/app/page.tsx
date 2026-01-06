@@ -222,11 +222,11 @@ export default function Home() {
             Spatial-MemER
           </h1>
           <h2 className="text-2xl md:text-3xl font-light mb-6 text-[#4a4a4a] leading-[1.3]">
-            Spatial Memory for Embodied Robots
+            Open-Source Spatial Memory for Embodied Robots.
           </h2>
           <p className="text-lg md:text-xl text-[#2a2a2a] mb-4 leading-relaxed font-light">
-            Adding spatial awareness to vision-language robot policies through
-            egocentric mapping and forward kinematics.
+            Adding and imbuing spatial awareness to vision-language robot
+            policies through egocentric mapping and forward kinematics.
           </p>
           <p className="text-base text-[#6a6a6a] mb-8 italic">
             Extending{" "}
@@ -274,8 +274,18 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0c2.5-2.5 2.5-6.5 0-9m0 9c-2.5-2.5-2.5-6.5 0-9m-7.5 4.5h15" />
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.8}
+                      d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0c2.5-2.5 2.5-6.5 0-9m0 9c-2.5-2.5-2.5-6.5 0-9m-7.5 4.5h15"
+                    />
                   </svg>
                 </a>
                 <a
@@ -284,7 +294,11 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                   </svg>
                 </a>
@@ -294,7 +308,11 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 8.98h3.96V21H3V8.98zM9.5 8.98h3.8v1.64h.05c.53-1 1.84-2.05 3.8-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-3.96v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9.5V8.98z" />
                   </svg>
                 </a>
@@ -337,8 +355,18 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0c2.5-2.5 2.5-6.5 0-9m0 9c-2.5-2.5-2.5-6.5 0-9m-7.5 4.5h15" />
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.8}
+                      d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0c2.5-2.5 2.5-6.5 0-9m0 9c-2.5-2.5-2.5-6.5 0-9m-7.5 4.5h15"
+                    />
                   </svg>
                 </a>
                 <a
@@ -347,7 +375,11 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                   </svg>
                 </a>
@@ -357,7 +389,11 @@ export default function Home() {
                   rel="noreferrer"
                   className="hover:text-[#1a1a1a] transition-colors"
                 >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-4 w-4"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M4.98 3.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM3 8.98h3.96V21H3V8.98zM9.5 8.98h3.8v1.64h.05c.53-1 1.84-2.05 3.8-2.05 4.07 0 4.82 2.68 4.82 6.16V21h-3.96v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9.5V8.98z" />
                   </svg>
                 </a>
@@ -1114,9 +1150,9 @@ for timestep in episode:
 
           <p className="text-lg text-[#2a2a2a] mb-6 leading-relaxed font-light text-center">
             We evaluate Spatial-MemER across controlled table-top setups and
-            longer-horizon tasks that stress spatial recall, landmark re-finding,
-            and geometric reasoning. Our goal is to make spatial memory tests as
-            repeatable as classic manipulation benchmarks.
+            longer-horizon tasks that stress spatial recall, landmark
+            re-finding, and geometric reasoning. Our goal is to make spatial
+            memory tests as repeatable as classic manipulation benchmarks.
           </p>
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
@@ -1154,8 +1190,8 @@ for timestep in episode:
               A Call for Benchmarking
             </h3>
             <p className="text-base text-[#2a2a2a] font-light leading-relaxed text-center">
-              Spatial memory needs standardized, community-driven benchmarks.
-              We propose suites spanning tabletop manipulation, navigation, and
+              Spatial memory needs standardized, community-driven benchmarks. We
+              propose suites spanning tabletop manipulation, navigation, and
               long-horizon rearrangement with shared metrics for localization
               drift, revisit accuracy, and memory decay. A concerted effort will
               make results comparable across labs and accelerate reliable
