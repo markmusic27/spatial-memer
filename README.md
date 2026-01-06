@@ -1,9 +1,43 @@
-# `Spatial-MemER`
+# Spatial-MemER
 
-A **\_\_** by Mark Msui Music (link) and Filippo Fonseca (link)
+<div align="center">
 
-> **Spatial Memory for Embodied Robots**
-> Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.
+### Spatial Memory for Embodied Robots
+
+**Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.**
+
+_A project we built in a few weeks extending [MemER: Memory-Enhanced Robot Policies](https://jen-pan.github.io/memer/)_.
+
+---
+
+<table>
+<tr>
+<td align="center">
+<img src="https://media.licdn.com/dms/image/v2/C4E03AQELZicH6wruqg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1619128430542?e=1769040000&v=beta&t=Ltzq0u9h8OQe15JewO_l1-t1AakWjrOjZrN8Fxj2hAg" width="120" style="border-radius: 50%;" /><br />
+<b>Mark Music</b><br />
+<a href="https://markmusic.io">markmusic.io</a><br />
+Stanford '28<br />
+CS & Math<br />
+<a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
+</td>
+<td align="center">
+<img src="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90" width="120" style="border-radius: 50%;" /><br />
+<b>Filippo Fonseca</b><br />
+<a href="https://filippofonseca.com">filippofonseca.com</a><br />
+Yale<br />
+Mechanical Engineering (ABET) & EECS<br />
+<a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
+</td>
+</tr>
+</table>
+
+\_We're passionate about the intersection of AI and hardware through robotics—optimizing policies and models.
+
+We strive to enable the future of embodied intelligence.\_
+
+---
+
+</div>
 
 ## Overview
 
@@ -19,9 +53,9 @@ Spatial-MemER extends vision-language robot policies (like MemER, RT-2) with exp
 
 ## Why Spatial-MemER?
 
-**Problem**: Existing vision-language policies lack spatial understanding. They see sequential images but don't know WHERE observations occurred in space.
+**Problem**: Existing vision-language policies like [MemER](https://jen-pan.github.io/memer/) (Sridhar et al., 2024) lack spatial understanding. They see sequential images but don't know WHERE observations occurred in space.
 
-**Solution**: Spatial-MemER provides:
+**Solution**: Spatial-MemER extends MemER's memory framework with:
 
 1. **Spatial map** showing robot position and keyframe locations
 2. **Watermarked keyframes** color-coded to match map markers
@@ -322,26 +356,51 @@ for timestep in episode:
 
 ## Citation
 
+If you use Spatial-MemER in your research, please cite:
+
 ```bibtex
-@software{spatial_memer_2024,
+@software{spatial_memer_2026,
   title = {Spatial-MemER: Spatial Memory for Embodied Robots},
-  author = {Your Name},
-  year = {2024},
+  author = {Music, Mark and Fonseca, Filippo},
+  year = {2026},
   url = {https://github.com/yourusername/spatial-memer}
 }
 ```
 
+This work extends [MemER: Memory-Enhanced Robot Policies](https://jen-pan.github.io/memer/):
+
+```bibtex
+@article{sridhar2024memer,
+  title = {MemER: Memory-Enhanced Robot Policies},
+  author = {Sridhar, Ajay and Pan, Jennifer and Sharma, Satvik and Finn, Chelsea},
+  year = {2024}
+}
+```
+
+## Acknowledgments
+
+This project builds on the MemER framework by Ajay Sridhar, Jennifer Pan, Satvik Sharma, and Chelsea Finn at Stanford. We extend their episodic memory approach with explicit spatial reasoning capabilities.
+
 ## License
 
-MIT License - see LICENSE file for details.
+MIT License. See our LICENSE file for details. Quite standard.
 
 ## Contact
 
-For questions, suggestions, or collaboration opportunities:
+**Mark Music**
+Stanford University, Class of 2028
+[mmusic@stanford.edu](mailto:mmusic@stanford.edu) | [markmusic.io](https://markmusic.io)
 
-- Open an issue on GitHub
-- Email: your.email@example.com
+**Filippo Fonseca**
+Yale University, Class of 2028
+[filippo.fonseca@yale.edu](mailto:filippo.fonseca@yale.edu) | [filippofonseca.com](https://filippofonseca.com)
 
 ---
 
-**Built for Physical Intelligence and the embodied AI research community.**
+<div align="center">
+
+**Made with ❤️ in Costa Rica 🇨🇷 for our inspiration: Chelsea Finn and her team @ Physical Intelligence, as well as the entire physical AI research community.**
+
+_Bridging AI and hardware to enable the future of robotics is a dream come true. If you have any questions, don't hesitate to reach out. We're always down for a chat._
+
+</div>
