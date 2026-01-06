@@ -126,8 +126,6 @@ class SpatialContext:
             list[np.ndarray] of H,W,3 watermarked images
         """
         cfg = self.map_config
-        padding = 10
-        size = cfg.keyframe_radius * 3  # square size matches map markers
         
         watermarked = []
         
@@ -140,24 +138,30 @@ class SpatialContext:
             # copy to avoid modifying original
             img = keyframe.copy()
             
+            # Size adapts to 1/6 of frame height
+            frame_height = keyframe.shape[0]
+            size = frame_height // 6
+            padding = size // 6  # Padding proportional to size
+            
             # draw square in top-left with padding
             top_left = (padding, padding)
             bottom_right = (padding + size, padding + size)
             cv2.rectangle(img, top_left, bottom_right, color, -1)
-            cv2.rectangle(img, top_left, bottom_right, (0, 0, 0), cfg.circle_border_size)
+            cv2.rectangle(img, top_left, bottom_right, (0, 0, 0), max(2, size // 30))
             
             # draw label (1-indexed)
             label = str(idx + 1)
-            font_scale = cfg.font_scale * 1.33
-            text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 1)[0]
+            font_scale = size / 40  # Scale font with box size
+            thickness = max(1, size // 60)
+            text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
             text_x = padding + (size - text_size[0]) // 2
             text_y = padding + (size + text_size[1]) // 2
 
             # add text twice for boldness
             cv2.putText(img, label, (text_x + 1, text_y - 1),
-                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), thickness, cv2.LINE_AA)
             cv2.putText(img, label, (text_x, text_y - 1),
-                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+                        cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), thickness, cv2.LINE_AA)
             
             watermarked.append(img)
         

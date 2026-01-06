@@ -31,17 +31,17 @@ TESTS = {
     "kitchen": {
         "video": "dataset/kitchen_body.mp4",
         "poses": "results/kitchen/dpvo_poses.txt",
-        "keyframes": ["00:05", "00:12", "00:20", "00:28"],  # MM:SS timestamps
+        "keyframes": ["00:23", "01:04", "01:30"],
     },
     "numbers": {
         "video": "dataset/numbers_body.mp4",
         "poses": "results/numbers/dpvo_poses.txt",
-        "keyframes": ["00:03", "00:30", "01:23"],  # MM:SS timestamps
+        "keyframes": ["00:18", "00:48", "01:17", "01:34"],
     },
 }
 
 VIDEO_FPS = 30  # Input video FPS
-OUTPUT_FPS = 15  # Output at 15Hz
+OUTPUT_FPS = 30  # Output at same rate as input video
 
 # ============================================================================
 
@@ -55,28 +55,30 @@ def parse_timestamp(ts: str) -> int:
     return minutes * 60 + seconds
 
 
-def load_dpvo_poses(pose_file: str) -> dict[int, np.ndarray]:
+def load_dpvo_poses(pose_file: str) -> list[np.ndarray]:
     """
-    Load DPVO poses from file.
+    Load DPVO poses from file as ordered list.
     
-    Format: frame_idx tx ty tz qx qy qz qw
+    Format: pose_idx tx ty tz qx qy qz qw
+    
+    Note: DPVO poses may be sparse (generated with stride), so pose indices
+    don't necessarily map 1:1 to video frame indices.
     
     Returns:
-        dict mapping frame_index -> SE(3) pose matrix
+        List of SE(3) pose matrices in order
     """
-    poses = {}
+    poses = []
     with open(pose_file, 'r') as f:
         for line in f:
             parts = line.strip().split()
             if len(parts) != 8:
                 continue
             
-            frame_idx = int(float(parts[0]))
             tx, ty, tz = float(parts[1]), float(parts[2]), float(parts[3])
             qx, qy, qz, qw = float(parts[4]), float(parts[5]), float(parts[6]), float(parts[7])
             
             pose = pose_from_translation_quaternion(tx, ty, tz, qx, qy, qz, qw)
-            poses[frame_idx] = pose
+            poses.append(pose)
     
     return poses
 
@@ -113,7 +115,13 @@ def run_test(test_name: str, config: dict, output_dir: Path, project_root: Path)
     # Load DPVO poses
     poses_path = project_root / config["poses"]
     dpvo_poses = load_dpvo_poses(str(poses_path))
-    print(f"Loaded {len(dpvo_poses)} DPVO poses")
+    num_poses = len(dpvo_poses)
+    
+    # Calculate pose-to-frame mapping
+    # DPVO was likely run with a stride, so poses are sparse
+    poses_per_frame = num_poses / total_frames
+    effective_pose_fps = num_poses / video_duration
+    print(f"Loaded {num_poses} DPVO poses ({effective_pose_fps:.1f} poses/sec, ratio: {poses_per_frame:.3f})")
     
     # Initialize spatial context
     ctx = SpatialContext()
@@ -150,13 +158,10 @@ def run_test(test_name: str, config: dict, output_dir: Path, project_root: Path)
         current_second = frame_idx // VIDEO_FPS
         
         # Get corresponding DPVO pose
-        # DPVO poses are indexed by frame number
-        if frame_idx in dpvo_poses:
-            pose = dpvo_poses[frame_idx]
-        else:
-            # Find closest pose
-            closest_idx = min(dpvo_poses.keys(), key=lambda x: abs(x - frame_idx))
-            pose = dpvo_poses[closest_idx]
+        # Map video frame index to pose index using the ratio
+        pose_idx = int(frame_idx * poses_per_frame)
+        pose_idx = min(pose_idx, num_poses - 1)  # Clamp to valid range
+        pose = dpvo_poses[pose_idx]
         
         # Add frame to spatial context
         frame_id = ctx.add_frame_with_pose(pose)
