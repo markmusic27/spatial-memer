@@ -71,7 +71,7 @@ def load_camera_intrinsics(calib_file: str) -> np.ndarray:
     if not calib_path.exists():
         raise FileNotFoundError(f"Calibration file not found: {calib_file}")
 
-    with open(calib_path, 'r') as f:
+    with open(calib_path, "r") as f:
         line = f.readline().strip()
         values = [float(x) for x in line.split()]
 
@@ -80,11 +80,7 @@ def load_camera_intrinsics(calib_file: str) -> np.ndarray:
 
     fx, fy, cx, cy = values
 
-    K = np.array([
-        [fx,  0, cx],
-        [ 0, fy, cy],
-        [ 0,  0,  1]
-    ], dtype=np.float32)
+    K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]], dtype=np.float32)
 
     return K
 
@@ -95,12 +91,13 @@ class Localization:
 
     Also exposes methods to modify DPVO to handle robot arm occlusions.
     """
+
     def __init__(
         self,
         camera_intrinsics: np.ndarray,
         camera_to_world: Optional[np.ndarray] = None,
         weights_path: str = "external/DPVO/dpvo.pth",
-        device: str = "cuda:0"
+        device: str = "cuda:0",
     ):
         """
         Initialize the localization system.
@@ -118,7 +115,9 @@ class Localization:
             )
 
         self.intrinsics = camera_intrinsics
-        self.camera_to_world = camera_to_world if camera_to_world is not None else np.eye(4)
+        self.camera_to_world = (
+            camera_to_world if camera_to_world is not None else np.eye(4)
+        )
         self.device = device
 
         # Initialize DPVO
@@ -219,8 +218,9 @@ class Localization:
         if isinstance(poses, torch.Tensor):
             poses = poses.cpu().numpy()
         elif isinstance(poses, list):
-            poses = np.array([p.cpu().numpy() if isinstance(p, torch.Tensor) else p
-                            for p in poses])
+            poses = np.array(
+                [p.cpu().numpy() if isinstance(p, torch.Tensor) else p for p in poses]
+            )
 
         # Transform all poses to world frame
         world_poses = np.array([self.camera_to_world @ p for p in poses])
@@ -229,8 +229,7 @@ class Localization:
 
     @staticmethod
     def create_camera_to_world_transform(
-        translation: np.ndarray = None,
-        rotation: np.ndarray = None
+        translation: np.ndarray = None, rotation: np.ndarray = None
     ) -> np.ndarray:
         """
         Create a camera-to-world transformation matrix.
