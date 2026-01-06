@@ -76,6 +76,26 @@ class SpatialContext:
 
         return frame_id
 
+    def add_frame_with_pose(self, pose: np.ndarray) -> int:
+        """
+        Store a pre-computed pose directly (bypasses forward kinematics).
+        
+        Use this when pose comes from external source like DPVO/SLAM
+        instead of robot joint angles.
+        
+        Args:
+            pose: SE(3) camera pose as 4x4 matrix
+            
+        Returns:
+            frame_id: The ID assigned to this frame
+        """
+        frame_id = self._frame_count
+        self._frame_count += 1
+
+        self.all_poses[frame_id] = pose
+
+        return frame_id
+
     def promote_to_keyframe(self, frame_id: int):
         """Promote a frame to keyframe status."""
         if frame_id not in self.all_poses:

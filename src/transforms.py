@@ -1,5 +1,49 @@
 import numpy as np
 
+
+def quaternion_to_rotation_matrix(qx: float, qy: float, qz: float, qw: float) -> np.ndarray:
+    """
+    Convert quaternion to 3x3 rotation matrix.
+    
+    Args:
+        qx, qy, qz, qw: Quaternion components (Hamilton convention)
+        
+    Returns:
+        R: 3x3 rotation matrix
+    """
+    # Normalize quaternion
+    norm = np.sqrt(qx*qx + qy*qy + qz*qz + qw*qw)
+    qx, qy, qz, qw = qx/norm, qy/norm, qz/norm, qw/norm
+    
+    # Rotation matrix from quaternion
+    R = np.array([
+        [1 - 2*(qy*qy + qz*qz), 2*(qx*qy - qz*qw), 2*(qx*qz + qy*qw)],
+        [2*(qx*qy + qz*qw), 1 - 2*(qx*qx + qz*qz), 2*(qy*qz - qx*qw)],
+        [2*(qx*qz - qy*qw), 2*(qy*qz + qx*qw), 1 - 2*(qx*qx + qy*qy)]
+    ])
+    
+    return R
+
+
+def pose_from_translation_quaternion(tx: float, ty: float, tz: float,
+                                      qx: float, qy: float, qz: float, qw: float) -> np.ndarray:
+    """
+    Create SE(3) pose matrix from translation and quaternion.
+    
+    Args:
+        tx, ty, tz: Translation components
+        qx, qy, qz, qw: Quaternion components (Hamilton convention, scalar-last)
+        
+    Returns:
+        T: 4x4 SE(3) transformation matrix
+    """
+    T = np.eye(4)
+    T[:3, :3] = quaternion_to_rotation_matrix(qx, qy, qz, qw)
+    T[:3, 3] = [tx, ty, tz]
+    
+    return T
+
+
 def extract_displacement(T: np.ndarray):
     """
     Given a transformation matrix, extract the (x,y,z) points
