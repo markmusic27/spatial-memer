@@ -1,4 +1,6 @@
-# Spatial-MemER
+# `Spatial-MemER`
+
+A **\_\_** by Mark Msui Music (link) and Filippo Fonseca (link)
 
 > **Spatial Memory for Embodied Robots**
 > Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.
@@ -263,7 +265,7 @@ for timestep in episode:
 
 ## Implementation Status
 
-**✅ Complete**:
+**Complete**:
 
 - Forward kinematics (7-DOF robot arm)
 - Pose tracking and storage
@@ -273,7 +275,7 @@ for timestep in episode:
 - DPVO integration for mobile robots
 - Comprehensive documentation
 
-**🔜 Next Steps**:
+**Next steps for this proj and research:**:
 
 - Integration with MemER codebase
 - Evaluation suite implementation (100 tests)
