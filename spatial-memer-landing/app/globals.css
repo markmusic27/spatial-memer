@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Signifier';
+  src: url('/fonts/TestSignifier-Regular-BF663d8462c4c0b.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Signifier';
+  src: url('/fonts/TestSignifier-RegularItalic-BF663d8462d189e.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Signifier';
+  src: url('/fonts/TestSignifier-Medium-BF663d8462c7c04.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Signifier';
+  src: url('/fonts/TestSignifier-Bold-BF663d84626293d.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Signifier';
+  src: url('/fonts/TestSignifier-Light-BF663d8462b5549.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Signifier', Georgia, serif;
+  background-color: #F5F4F0;
+  color: #1a1a1a;
+  line-height: 1.7;
+}
+
+code {
+  font-family: var(--font-geist-mono), 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  font-family: var(--font-geist-mono), 'Courier New', monospace;
+}
