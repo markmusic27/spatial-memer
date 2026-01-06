@@ -8,22 +8,25 @@
 Spatial-MemER extends vision-language robot policies (like MemER, RT-2) with explicit spatial reasoning. By maintaining an egocentric bird's-eye view map of keyframe observations, robots can understand WHERE they observed objects in 3D space, not just WHAT they saw.
 
 **Key Features**:
-- 🎯 **Three-line integration**: Add spatial awareness to any robot policy
-- 📍 **Precise localization**: Forward kinematics-based pose estimation (no SLAM needed for stationary robots)
-- 🗺️ **Egocentric maps**: Auto-generated BEV visualizations showing robot + keyframe locations
-- 🎨 **Visual correspondence**: Color-coded watermarks link keyframe images to map positions
-- 🔧 **Modular design**: Independent, testable components
+
+- **Three-line integration**: Add spatial awareness to any robot policy
+- **Precise localization**: Forward kinematics-based pose estimation (no SLAM needed for stationary robots)
+- **Egocentric maps**: Auto-generated BEV visualizations showing robot + keyframe locations
+- **Visual correspondence**: Color-coded watermarks link keyframe images to map positions
+- **Modular design**: Independent, testable components
 
 ## Why Spatial-MemER?
 
 **Problem**: Existing vision-language policies lack spatial understanding. They see sequential images but don't know WHERE observations occurred in space.
 
 **Solution**: Spatial-MemER provides:
+
 1. **Spatial map** showing robot position and keyframe locations
 2. **Watermarked keyframes** color-coded to match map markers
 3. **Pose tracking** using precise forward kinematics
 
 **Impact**: Enables spatial reasoning tasks like:
+
 - "Go back to where you saw the cup"
 - "Move to the left of the red block"
 - "The target is between the two markers"
@@ -232,6 +235,7 @@ python demo.py --imagedir=../../assets/home_example.mp4 --calib=calib/iphone.txt
 We've designed a comprehensive evaluation suite with **10 task categories × 10 examples = 100 tests** to demonstrate that policies actually use spatial information:
 
 **Example Tasks**:
+
 1. **Occluded Object Retrieval**: "Get the cup" (cup out of view, must use spatial memory)
 2. **Relative Positioning**: "Move to the left of the block" (requires spatial reasoning)
 3. **Return to Location**: "Go back to where you saw the marker" (temporal spatial memory)
@@ -260,6 +264,7 @@ for timestep in episode:
 ## Implementation Status
 
 **✅ Complete**:
+
 - Forward kinematics (7-DOF robot arm)
 - Pose tracking and storage
 - Egocentric BEV map generation
@@ -269,6 +274,7 @@ for timestep in episode:
 - Comprehensive documentation
 
 **🔜 Next Steps**:
+
 - Integration with MemER codebase
 - Evaluation suite implementation (100 tests)
 - Real robot testing and validation
@@ -277,18 +283,21 @@ for timestep in episode:
 ## Technical Highlights
 
 ### Forward Kinematics
+
 - 7-DOF robot arm (e.g., Franka Panda)
 - DH parameter-based kinematic chain
 - Camera at end-effector
 - < 0.1° accuracy with precise actuators
 
 ### Map Generation
+
 - Automatic scaling (fits all keyframes)
 - Outlier detection (> 2σ threshold)
 - Overlap resolution (spiral placement)
 - Configurable appearance (`MapConfig`)
 
 ### Performance
+
 - Forward kinematics: < 0.1 ms
 - Map generation (10 keyframes): < 5 ms
 - Total overhead per policy iteration: < 10 ms
@@ -327,6 +336,7 @@ MIT License - see LICENSE file for details.
 ## Contact
 
 For questions, suggestions, or collaboration opportunities:
+
 - Open an issue on GitHub
 - Email: your.email@example.com
 
