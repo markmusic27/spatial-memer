@@ -1,42 +1,48 @@
 <div align="center">
-
-# `Spatial-MemER`
-
-### Spatial Memory for Embodied Robots
-
-**Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.**
-
-_A project we built in a few weeks extending [MemER: Memory-Enhanced Robot Policies](https://jen-pan.github.io/memer/)_.
-
----
-
-<table>
-<tr>
-<td align="center">
-<img src="https://media.licdn.com/dms/image/v2/C4E03AQELZicH6wruqg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1619128430542?e=1769040000&v=beta&t=Ltzq0u9h8OQe15JewO_l1-t1AakWjrOjZrN8Fxj2hAg" width="120" style="border-radius: 50%;" /><br />
-<b>Mark Music</b><br />
-<a href="https://markmusic.io">markmusic.io</a><br />
-Stanford '28<br />
-CS & Math<br />
-<a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
-</td>
-<td align="center">
-<img src="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90" width="120" style="border-radius: 50%;" /><br />
-<b>Filippo Fonseca</b><br />
-<a href="https://filippofonseca.com">filippofonseca.com</a><br />
-Yale<br />
-Mech. Eng. (ABET) & EECS<br />
-<a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
-</td>
-</tr>
-</table>
-
-We're passionate about the intersection of AI and hardware through robotics—optimizing policies and models.
-
-We strive to enable the future of embodied intelligence.
+  <img src="spatial-memer-landing/public/cover.png" alt="Spatial-MemER cover" width="860" style="border-radius: 16px;" />
+  <h1><code>Spatial-MemER</code></h1>
+  <p><strong>Spatial Memory for Embodied Robots</strong></p>
+  <p>Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.</p>
+  <p>
+    <img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-0B5FFF" />
+    <img alt="Python 3.1+" src="https://img.shields.io/badge/python-3.8%2B-1F6FEB" />
+    <img alt="Status: Research" src="https://img.shields.io/badge/status-research-0E9F6E" />
+    <img alt="Domain: Robotics" src="https://img.shields.io/badge/domain-robotics-111827" />
+  </p>
+  <p>
+    <a href="docs/PROJECT_OVERVIEW.md">Project Overview</a> ·
+    <a href="docs/ARCHITECTURE.md">Architecture</a> ·
+    <a href="docs/INTEGRATION_GUIDE.md">Integration Guide</a> ·
+    <a href="docs/EVALUATION.md">Evaluation</a>
+  </p>
+  <p><em>A project we built in a few weeks extending <a href="https://jen-pan.github.io/memer/">MemER: Memory-Enhanced Robot Policies</a>.</em></p>
+</div>
 
 ---
 
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="https://media.licdn.com/dms/image/v2/C4E03AQELZicH6wruqg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1619128430542?e=1769040000&v=beta&t=Ltzq0u9h8OQe15JewO_l1-t1AakWjrOjZrN8Fxj2hAg" width="120" style="border-radius: 50%;" /><br />
+        <b>Mark Music</b><br />
+        <a href="https://markmusic.io">markmusic.io</a><br />
+        Stanford '28<br />
+        CS & Math<br />
+        <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
+      </td>
+      <td align="center">
+        <img src="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90" width="120" style="border-radius: 50%;" /><br />
+        <b>Filippo Fonseca</b><br />
+        <a href="https://filippofonseca.com">filippofonseca.com</a><br />
+        Yale<br />
+        Mech. Eng. (ABET) & EECS<br />
+        <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
+      </td>
+    </tr>
+  </table>
+  <p>We're passionate about the intersection of AI and hardware through robotics — optimizing policies and models.</p>
+  <p>We strive to enable the future of embodied intelligence.</p>
 </div>
 
 ## Overview
