@@ -1017,6 +1017,86 @@ for timestep in episode:
         <div className="border-t border-[#d4d3cb]"></div>
       </div>
 
+      {/* Testing & Validation */}
+      <section data-reveal className="py-8 px-6">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <svg
+              className="w-7 h-7 text-[#1a1a1a]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h2 className="text-3xl font-medium text-[#1a1a1a] text-center">
+              Testing & Validation
+            </h2>
+          </div>
+
+          <p className="text-lg text-[#2a2a2a] mb-6 leading-relaxed font-light text-center">
+            We evaluate Spatial-MemER across controlled table-top setups and
+            longer-horizon tasks that stress spatial recall, landmark re-finding,
+            and geometric reasoning. Our goal is to make spatial memory tests as
+            repeatable as classic manipulation benchmarks.
+          </p>
+
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+              <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
+                Spatial Recall
+              </h3>
+              <p className="text-sm text-[#4a4a4a] font-light leading-relaxed">
+                Return-to-location tasks and occluded object retrieval to
+                measure memory persistence and drift.
+              </p>
+            </div>
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+              <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
+                Map Consistency
+              </h3>
+              <p className="text-sm text-[#4a4a4a] font-light leading-relaxed">
+                Keyframe-map alignment checks and inter-keyframe distance
+                stability under repeated viewpoints.
+              </p>
+            </div>
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+              <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
+                Policy Impact
+              </h3>
+              <p className="text-sm text-[#4a4a4a] font-light leading-relaxed">
+                Task success and sample efficiency comparisons vs. baselines
+                without spatial memory augmentation.
+              </p>
+            </div>
+          </div>
+
+          <div className="glossy-card p-6 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 text-center">
+              A Call for Benchmarking
+            </h3>
+            <p className="text-base text-[#2a2a2a] font-light leading-relaxed text-center">
+              Spatial memory needs standardized, community-driven benchmarks.
+              We propose suites spanning tabletop manipulation, navigation, and
+              long-horizon rearrangement with shared metrics for localization
+              drift, revisit accuracy, and memory decay. A concerted effort will
+              make results comparable across labs and accelerate reliable
+              embodied AI.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="max-w-3xl mx-auto px-6 my-8">
+        <div className="border-t border-[#d4d3cb]"></div>
+      </div>
+
       {/* BibTeX Citation */}
       <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
