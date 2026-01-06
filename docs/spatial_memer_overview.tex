@@ -1,0 +1,82 @@
+% Spatial-MemER overview
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{amsmath}
+
+\title{Spatial-MemER: Stationary Robot Arm Mapping and Keyframe Context}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Goal}
+We want a spatial extension to MemER for robots that are clamped to a table (no base motion). The robot arm is precise, so we do not need SLAM for localization. Instead, we use forward kinematics to compute the camera pose (SE(3) transform) from the current joint angles. Each keyframe can then be located on an egocentric map where the current robot position is always at the origin.
+
+\section{Core Idea (Stationary Setup)}
+\begin{itemize}[leftmargin=*]
+  \item The robot base is fixed; only the arm moves.
+  \item At any time, joint angles uniquely determine the camera pose.
+  \item The camera pose is represented as a $4 \times 4$ SE(3) matrix (rotation + translation).
+  \item Each time we take a keyframe, we store the pose computed from forward kinematics.
+  \item The map is generated from all stored keyframe poses, expressed in the current robot frame (egocentric).
+\end{itemize}
+
+\section{What the Map Shows}
+\begin{itemize}[leftmargin=*]
+  \item The current robot position is always at $(0,0)$ in the map.
+  \item Keyframes are plotted by their relative XY positions.
+  \item The map shows heading: ``up'' corresponds to the robot's forward direction derived from the pose.
+  \item Each keyframe uses a distinct color, and keyframe images are watermarked with the same color for easy matching.
+\end{itemize}
+
+\section{Algorithm Notes (from Mark)}
+\begin{itemize}[leftmargin=*]
+  \item The map dynamically scales to fit keyframes.
+  \item Outliers are identified: compute L2 distances of keyframes from the robot; if distance $>$ mean $+ 2\cdot$std, treat as outlier and clamp to border.
+  \item Overlap correction: if two keyframes are too close for the current map resolution, they are offset to avoid visual collision.
+  \item The map is intentionally readable in cluttered cases (e.g., many close keyframes).
+  \item Map parameters are configurable via a dedicated config object.
+\end{itemize}
+
+\section{Data Flow (High-Level Policy Loop)}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Store pose:} compute pose from joint angles; add frame.
+  \item \textbf{Generate map:} build egocentric BEV map and color mapping.
+  \item \textbf{Watermark keyframes:} color-code keyframe images to match map.
+  \item \textbf{VLM runs:} VLM is fed the map and watermarked keyframes.
+  \item \textbf{Promote keyframes:} clustering selects which frames become keyframes.
+\end{enumerate}
+
+\section{Pseudocode}
+\begin{verbatim}
+# At 1Hz (in high-level policy):
+# 1. Store current pose
+frame_id = spatial_context.add_frame(robot_state, robot_pose)
+
+# 2. Generate map and watermark keyframes
+map, colors = spatial_context.generate_map()
+watermarked_keyframes = ctx.watermark_keyframes(keyframe_images, colors)
+
+# 3. VLM runs... (VLM is fed the map and watermarked keyframes)
+
+# 4. Promote selected keyframes (clustering selects a keyframe, there can be none)
+for selected_id in selected_keyframe_ids:
+    spatial_context.promote_to_keyframe(selected_id)
+\end{verbatim}
+
+\section{How This Maps to the Codebase}
+\begin{itemize}[leftmargin=*]
+  \item \texttt{src/robot\_arm.py}: forward kinematics for the robot arm; returns SE(3) pose.
+  \item \texttt{src/transforms.py}: SE(3) helpers (validation, inversion, relative pose, translation).
+  \item \texttt{src/spatial\_context.py}: core map generation, keyframe storage, watermarking.
+  \item \texttt{scripts/test\_spatial\_context.py}: demo of map + keyframe watermarking.
+\end{itemize}
+
+\section{Optional SLAM / Relocalization}
+There is a placeholder for a relocalization path using external SLAM (e.g., DROID-SLAM or DPVO). For the stationary setup, this is unnecessary because the base is fixed and forward kinematics is sufficient.
+
+\end{document}

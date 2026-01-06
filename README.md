@@ -38,6 +38,7 @@ python demo.py \
 ```
 
 Results saved to:
+
 - `external/DPVO/saved_trajectories/home_example.txt` - camera poses (TUM format)
 - `external/DPVO/trajectory_plots/home_example.pdf` - trajectory visualization
 
