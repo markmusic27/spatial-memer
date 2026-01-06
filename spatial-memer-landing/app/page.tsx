@@ -1,8 +1,144 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+
+type ActionLink = {
+  href: string
+  label: string
+  icon: JSX.Element
+  newTab?: boolean
+}
+
+const actionLinks: ActionLink[] = [
+  {
+    href: 'https://github.com/markmusic27/spatial-memer',
+    label: 'Code',
+    newTab: true,
+    icon: (
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path
+          fillRule="evenodd"
+          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+          clipRule="evenodd"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: 'https://github.com/markmusic27/spatial-memer/tree/main/docs',
+    label: 'Docs',
+    newTab: true,
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: '#',
+    label: 'Paper (Soon)',
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+    ),
+  },
+  {
+    href: '#demo',
+    label: 'Demo',
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+        />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
+]
+
 export default function Home() {
+  const [showStickyNav, setShowStickyNav] = useState(false)
+  const linkRowRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const updateStickyNav = () => {
+      if (!linkRowRef.current) {
+        return
+      }
+      const { bottom } = linkRowRef.current.getBoundingClientRect()
+      setShowStickyNav(bottom <= 0)
+    }
+
+    updateStickyNav()
+    window.addEventListener('scroll', updateStickyNav, { passive: true })
+    window.addEventListener('resize', updateStickyNav)
+    return () => {
+      window.removeEventListener('scroll', updateStickyNav)
+      window.removeEventListener('resize', updateStickyNav)
+    }
+  }, [])
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach((element) => element.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+    )
+
+    elements.forEach((element) => observer.observe(element))
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
+      <nav className={`sticky-nav ${showStickyNav ? 'is-visible' : ''}`}>
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="sticky-nav-surface">
+            <div className="flex flex-wrap justify-center gap-3 px-3 py-2">
+              {actionLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.newTab ? '_blank' : undefined}
+                  rel={link.newTab ? 'noreferrer' : undefined}
+                  className="glossy-pill inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] text-xs shadow-[2px_2px_5px_rgba(0,0,0,0.08),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+                >
+                  {link.icon}
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </nav>
       {/* Hero Section */}
-      <section className="pt-16 pb-12 px-6">
+      <section data-reveal className="pt-16 pb-12 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-medium mb-4 text-[#1a1a1a] tracking-tight leading-[1.1]">
             Spatial-MemER
@@ -33,13 +169,16 @@ export default function Home() {
               >
                 Mark Music
               </a>
-              <div className="mt-2 flex flex-col items-center gap-1.5 text-sm text-[#6a6a6a]">
-                <img
-                  src="/stanfordlogo.jpg"
-                  alt="Stanford logo"
-                  className="h-6 w-6 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
-                />
-                <span>Stanford &apos;28</span>
+              <div className="mt-2 flex flex-col items-center gap-1 text-sm text-[#6a6a6a]">
+                <div className="inline-flex items-center gap-2">
+                  <img
+                    src="/stanfordlogo.jpg"
+                    alt="Stanford logo"
+                    className="h-5 w-5 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
+                  />
+                  <span>Stanford &apos;28</span>
+                </div>
+                <span className="text-xs text-[#7a7a7a]">CS + Math</span>
               </div>
             </div>
             <div className="text-center">
@@ -49,99 +188,36 @@ export default function Home() {
               >
                 Filippo Fonseca
               </a>
-              <div className="mt-2 flex flex-col items-center gap-1.5 text-sm text-[#6a6a6a]">
-                <img
-                  src="/yalelogo.png"
-                  alt="Yale logo"
-                  className="h-6 w-6 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
-                />
-                <span>Yale &apos;28</span>
+              <div className="mt-2 flex flex-col items-center gap-1 text-sm text-[#6a6a6a]">
+                <div className="inline-flex items-center gap-2">
+                  <img
+                    src="/yalelogo.png"
+                    alt="Yale logo"
+                    className="h-5 w-5 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
+                  />
+                  <span>Yale &apos;28</span>
+                </div>
+                <span className="text-xs text-[#7a7a7a]">
+                  MechE (ABET) + EECS
+                </span>
               </div>
             </div>
           </div>
 
           {/* Links */}
-          <div className="flex flex-wrap justify-center gap-3">
-            <a
-              href="https://github.com/markmusic27/spatial-memer"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  fillRule="evenodd"
-                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Code
-            </a>
-            <a
-              href="https://github.com/markmusic27/spatial-memer/tree/main/docs"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div ref={linkRowRef} className="flex flex-wrap justify-center gap-3">
+            {actionLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.newTab ? '_blank' : undefined}
+                rel={link.newTab ? 'noreferrer' : undefined}
+                className="glossy-pill inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-                />
-              </svg>
-              Docs
-            </a>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              Paper (Soon)
-            </a>
-            <a
-              href="#demo"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              Demo
-            </a>
+                {link.icon}
+                {link.label}
+              </a>
+            ))}
           </div>
 
           {/* Cover Image Placeholder */}
@@ -165,7 +241,7 @@ export default function Home() {
       </div>
 
       {/* Abstract */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-medium mb-5 text-[#1a1a1a] text-center">
             Abstract
@@ -187,7 +263,7 @@ export default function Home() {
       </div>
 
       {/* Demo Video Section */}
-      <section id="demo" className="py-8 px-6">
+      <section id="demo" data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="aspect-video bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg flex items-center justify-center text-[#6a6a6a] mb-4">
             <div className="text-center">
@@ -226,7 +302,7 @@ export default function Home() {
       </div>
 
       {/* Overview Section */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-medium mb-6 text-[#1a1a1a] text-center">
             Overview
@@ -242,7 +318,7 @@ export default function Home() {
 
           {/* Key Features */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -266,7 +342,7 @@ export default function Home() {
                 changes
               </p>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -295,7 +371,7 @@ export default function Home() {
                 Forward kinematics-based pose estimation (no SLAM needed)
               </p>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -319,7 +395,7 @@ export default function Home() {
                 locations
               </p>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -352,13 +428,13 @@ export default function Home() {
       </div>
 
       {/* Why Section */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
             Why Spatial-MemER?
           </h2>
           <div className="space-y-8">
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-3">
                 <svg
                   className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -385,7 +461,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-3">
                 <svg
                   className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -412,7 +488,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-3">
                 <svg
                   className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -449,7 +525,7 @@ export default function Home() {
       </div>
 
       {/* Quick Start Code */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <svg
@@ -521,7 +597,7 @@ ctx.promote_to_keyframe(frame_id)
       </div>
 
       {/* Architecture */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <svg
@@ -563,14 +639,14 @@ ctx.promote_to_keyframe(frame_id)
 
           <div>
             <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-              For Mobile Robots (Optional)
+              For Mobile Robots
             </h3>
             <p className="text-base text-[#4a4a4a] mb-4 font-light leading-relaxed">
               Robots with moving bases:
             </p>
             <div className="bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg p-6">
               <pre className="text-center font-mono text-sm overflow-x-auto text-[#2a2a2a] leading-relaxed">
-                <code>{`RGB Frames → DPVO → Robot Pose (World) → Combined with FK → Spatial Map`}</code>
+                <code>{`RGB Frames → DPVO (Deep Patch Visual Odometry) → Robot Pose (World) + FK → Spatial Map`}</code>
               </pre>
             </div>
           </div>
@@ -583,7 +659,7 @@ ctx.promote_to_keyframe(frame_id)
       </div>
 
       {/* More Code Examples */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <svg
@@ -666,7 +742,7 @@ for timestep in episode:
       </div>
 
       {/* Use Cases */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <svg
@@ -687,7 +763,7 @@ for timestep in episode:
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -712,7 +788,7 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -737,7 +813,7 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -762,7 +838,7 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -787,7 +863,7 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -812,7 +888,7 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
               <div className="flex items-start gap-3 mb-2">
                 <svg
                   className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
@@ -853,7 +929,7 @@ for timestep in episode:
       </div>
 
       {/* BibTeX Citation */}
-      <section className="py-8 px-6">
+      <section data-reveal className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 mb-8">
             <svg
@@ -915,7 +991,7 @@ for timestep in episode:
       </div>
 
       {/* Footer */}
-      <footer className="py-10 px-6">
+      <footer data-reveal className="py-10 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mb-8">
             <h3 className="text-xl font-medium mb-5 text-[#1a1a1a]">Contact</h3>
@@ -959,8 +1035,8 @@ for timestep in episode:
               Jennifer Pan, Satvik Sharma, and Chelsea Finn at Stanford.
             </p>
             <p>
-              Apache 2.0 License · Made with care in Costa Rica for the physical
-              AI research community.
+              Apache 2.0 License · Made with ❤️ in Costa Rica 🇨🇷 for the
+              physical AI research community.
             </p>
           </div>
         </div>

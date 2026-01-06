@@ -46,7 +46,7 @@ html {
 
 body {
   font-family: 'Signifier', Georgia, serif;
-  background-color: #F5F4F0;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.85), rgba(245, 244, 240, 0.6) 55%), #F5F4F0;
   color: #1a1a1a;
   line-height: 1.7;
 }
@@ -58,4 +58,81 @@ code {
 
 pre {
   font-family: var(--font-geist-mono), 'Courier New', monospace;
+}
+
+.sticky-nav {
+  position: fixed;
+  top: 12px;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  opacity: 0;
+  transform: translateY(-12px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.sticky-nav.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.sticky-nav-surface {
+  width: fit-content;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: rgba(250, 250, 248, 0.85);
+  border: 1px solid rgba(214, 212, 202, 0.7);
+  box-shadow: 0 12px 30px rgba(26, 26, 26, 0.12), inset 1px 1px 3px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.glossy-pill,
+.glossy-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.glossy-pill::after,
+.glossy-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.glossy-pill:hover,
+.glossy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(26, 26, 26, 0.12), 2px 2px 6px rgba(0, 0, 0, 0.12), -2px -2px 6px rgba(255, 255, 255, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .glossy-pill,
+  .glossy-card {
+    transition: none;
+  }
 }
