@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 
 type ActionLink = {
-  href: string
-  label: string
-  icon: JSX.Element
-  newTab?: boolean
-}
+  href: string;
+  label: string;
+  icon: JSX.Element;
+  newTab?: boolean;
+};
 
 const actionLinks: ActionLink[] = [
   {
-    href: 'https://github.com/markmusic27/spatial-memer',
-    label: 'Code',
+    href: "https://github.com/markmusic27/spatial-memer",
+    label: "Code",
     newTab: true,
     icon: (
       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -25,11 +25,16 @@ const actionLinks: ActionLink[] = [
     ),
   },
   {
-    href: 'https://github.com/markmusic27/spatial-memer/tree/main/docs',
-    label: 'Docs',
+    href: "https://github.com/markmusic27/spatial-memer/tree/main/docs",
+    label: "Docs",
     newTab: true,
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -40,10 +45,15 @@ const actionLinks: ActionLink[] = [
     ),
   },
   {
-    href: '#',
-    label: 'Paper (Soon)',
+    href: "#",
+    label: "Paper (Soon)",
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -54,70 +64,138 @@ const actionLinks: ActionLink[] = [
     ),
   },
   {
-    href: '#demo',
-    label: 'Demo',
+    href: "#demo",
+    label: "Demo",
     icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg
+        className="w-4 h-4"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
           d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
         />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
       </svg>
     ),
   },
-]
+];
 
 export default function Home() {
-  const [showStickyNav, setShowStickyNav] = useState(false)
-  const linkRowRef = useRef<HTMLDivElement | null>(null)
+  const [showStickyNav, setShowStickyNav] = useState(false);
+  const linkRowRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const updateStickyNav = () => {
       if (!linkRowRef.current) {
-        return
+        return;
       }
-      const { bottom } = linkRowRef.current.getBoundingClientRect()
-      setShowStickyNav(bottom <= 0)
-    }
+      const { bottom } = linkRowRef.current.getBoundingClientRect();
+      setShowStickyNav(bottom <= 0);
+    };
 
-    updateStickyNav()
-    window.addEventListener('scroll', updateStickyNav, { passive: true })
-    window.addEventListener('resize', updateStickyNav)
+    updateStickyNav();
+    window.addEventListener("scroll", updateStickyNav, { passive: true });
+    window.addEventListener("resize", updateStickyNav);
     return () => {
-      window.removeEventListener('scroll', updateStickyNav)
-      window.removeEventListener('resize', updateStickyNav)
+      window.removeEventListener("scroll", updateStickyNav);
+      window.removeEventListener("resize", updateStickyNav);
+    };
+  }, []);
+
+  const formatTime = (timeSeconds: number) => {
+    if (!Number.isFinite(timeSeconds)) {
+      return "0:00";
     }
-  }, [])
+    const minutes = Math.floor(timeSeconds / 60);
+    const seconds = Math.floor(timeSeconds % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const togglePlay = () => {
+    if (!videoRef.current) {
+      return;
+    }
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+    } else {
+      videoRef.current.pause();
+    }
+  };
+
+  const toggleMute = () => {
+    if (!videoRef.current) {
+      return;
+    }
+    const nextMuted = !videoRef.current.muted;
+    videoRef.current.muted = nextMuted;
+    setIsMuted(nextMuted);
+  };
+
+  const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!videoRef.current) {
+      return;
+    }
+    const nextTime = Number(event.target.value);
+    videoRef.current.currentTime = nextTime;
+    setCurrentTime(nextTime);
+  };
+
+  const progressPercent = duration ? (currentTime / duration) * 100 : 0;
+
+  const handleFullscreen = () => {
+    if (!videoRef.current) {
+      return;
+    }
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      videoRef.current.requestFullscreen();
+    }
+  };
 
   useEffect(() => {
-    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
-    if (!('IntersectionObserver' in window)) {
-      elements.forEach((element) => element.classList.add('is-visible'))
-      return
+    const elements = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-reveal]")
+    );
+    if (!("IntersectionObserver" in window)) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible')
-            observer.unobserve(entry.target)
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
           }
-        })
+        });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
-    )
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
+    );
 
-    elements.forEach((element) => observer.observe(element))
-    return () => observer.disconnect()
-  }, [])
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
-      <nav className={`sticky-nav ${showStickyNav ? 'is-visible' : ''}`}>
+      <nav className={`sticky-nav ${showStickyNav ? "is-visible" : ""}`}>
         <div className="max-w-3xl mx-auto px-6">
           <div className="sticky-nav-surface">
             <div className="flex flex-wrap justify-center gap-3 px-3 py-2">
@@ -125,8 +203,8 @@ export default function Home() {
                 <a
                   key={link.label}
                   href={link.href}
-                  target={link.newTab ? '_blank' : undefined}
-                  rel={link.newTab ? 'noreferrer' : undefined}
+                  target={link.newTab ? "_blank" : undefined}
+                  rel={link.newTab ? "noreferrer" : undefined}
                   className="glossy-pill inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] text-xs shadow-[2px_2px_5px_rgba(0,0,0,0.08),-2px_-2px_5px_rgba(255,255,255,0.7)]"
                 >
                   {link.icon}
@@ -163,6 +241,11 @@ export default function Home() {
           {/* Authors */}
           <div className="flex flex-wrap justify-center gap-10 mb-8 text-base">
             <div className="text-center">
+              <img
+                src="https://markmusic.notion.site/image/attachment%3Aa0fd4fee-5d6a-4c90-b9e0-b69387933ebd%3AFrame_2.png?id=1ceb37de-b65d-801a-ac5c-d1c7314f1a35&table=block&spaceId=1836a043-9d61-47b3-af19-484cf61d0f91&width=250&userId=&cache=v2"
+                alt="Mark Music"
+                className="mx-auto mb-2 h-12 w-12 rounded-full object-cover border border-[#d8d6cb] bg-[#fafaf8]"
+              />
               <a
                 href="https://markmusic.io"
                 className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors font-medium border-b border-[#1a1a1a] hover:border-[#4a4a4a]"
@@ -182,6 +265,11 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center">
+              <img
+                src="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90"
+                alt="Filippo Fonseca"
+                className="mx-auto mb-2 h-12 w-12 rounded-full object-cover border border-[#d8d6cb] bg-[#fafaf8]"
+              />
               <a
                 href="https://filippofonseca.com"
                 className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors font-medium border-b border-[#1a1a1a] hover:border-[#4a4a4a]"
@@ -210,8 +298,8 @@ export default function Home() {
               <a
                 key={link.label}
                 href={link.href}
-                target={link.newTab ? '_blank' : undefined}
-                rel={link.newTab ? 'noreferrer' : undefined}
+                target={link.newTab ? "_blank" : undefined}
+                rel={link.newTab ? "noreferrer" : undefined}
                 className="glossy-pill inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
               >
                 {link.icon}
@@ -220,73 +308,74 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Cover Image Placeholder */}
+          {/* Cover Image */}
           <div className="mt-10">
-            <div className="relative overflow-hidden rounded-2xl bg-[#F1F0EA] shadow-[inset_2px_2px_8px_rgba(0,0,0,0.08),inset_-2px_-2px_8px_rgba(255,255,255,0.7)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(241,240,234,0.2))] opacity-80" />
-              <div className="relative aspect-[16/9] flex items-center justify-center border border-[#e3e1d6] text-[#6a6a6a] text-sm tracking-wide uppercase">
-                Cover Image Placeholder
-              </div>
+            <div className="glossy-card relative overflow-hidden rounded-2xl bg-[#F1F0EA] border border-[#e3e1d6] shadow-[inset_2px_2px_8px_rgba(0,0,0,0.08),inset_-2px_-2px_8px_rgba(255,255,255,0.7),2px_2px_8px_rgba(0,0,0,0.08)]">
+              <img
+                src="/cover.png"
+                alt="Spatial-MemER cover"
+                className="w-full aspect-[16/9] object-contain bg-[#F1F0EA]"
+              />
             </div>
-            <p className="mt-3 text-xs text-[#7a7a7a] italic">
-              Replace with a project teaser image or pipeline diagram.
-            </p>
           </div>
         </div>
       </section>
 
-      {/* Divider */}
-      <div className="max-w-3xl mx-auto px-6 my-8">
-        <div className="border-t border-[#d4d3cb]"></div>
-      </div>
-
-      {/* Abstract */}
-      <section data-reveal className="py-8 px-6">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-medium mb-5 text-[#1a1a1a] text-center">
-            Abstract
-          </h2>
-          <p className="text-lg text-[#2a2a2a] leading-relaxed font-light text-center">
-            Spatial-MemER augments vision-language robot policies with an
-            egocentric spatial memory that maps keyframe observations into a
-            coherent 3D-aware representation. By pairing forward-kinematics pose
-            tracking with lightweight map generation, the method enables
-            policies to reason about where objects were seen, not just what was
-            observed, with minimal integration overhead.
-          </p>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="max-w-3xl mx-auto px-6 my-8">
-        <div className="border-t border-[#d4d3cb]"></div>
-      </div>
-
       {/* Demo Video Section */}
-      <section id="demo" data-reveal className="py-8 px-6">
+      <section id="demo" className="py-8 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="aspect-video bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg flex items-center justify-center text-[#6a6a6a] mb-4">
-            <div className="text-center">
-              <svg
-                className="w-16 h-16 mx-auto mb-3 opacity-40"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div className="video-shell">
+            <video
+              ref={videoRef}
+              className="video-frame"
+              src="/demo.mp4"
+              playsInline
+              onClick={togglePlay}
+              onTimeUpdate={(event) =>
+                setCurrentTime(event.currentTarget.currentTime)
+              }
+              onLoadedMetadata={(event) =>
+                setDuration(event.currentTarget.duration)
+              }
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
+            />
+            <div className="video-controls">
+              <button
+                type="button"
+                className="video-icon-button"
+                onClick={togglePlay}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <p className="text-lg font-light">Demo Video Coming Soon</p>
+                {isPlaying ? "⏸" : "▶"}
+              </button>
+              <span className="video-time">{formatTime(currentTime)}</span>
+              <input
+                className="video-range"
+                type="range"
+                min={0}
+                max={duration || 0}
+                step="0.1"
+                value={currentTime}
+                onChange={handleSeek}
+                style={{
+                  background: `linear-gradient(90deg, var(--highlight-yellow) ${progressPercent}%, rgba(214, 212, 202, 0.7) ${progressPercent}%)`,
+                }}
+              />
+              <span className="video-time">{formatTime(duration)}</span>
+              <button
+                type="button"
+                className="video-icon-button"
+                onClick={toggleMute}
+              >
+                {isMuted ? "🔇" : "🔊"}
+              </button>
+              <button
+                type="button"
+                className="video-icon-button"
+                onClick={handleFullscreen}
+              >
+                ⛶
+              </button>
             </div>
           </div>
           <p className="text-center text-[#4a4a4a] text-base font-light max-w-2xl mx-auto leading-relaxed">
@@ -994,7 +1083,13 @@ for timestep in episode:
       <footer data-reveal className="py-10 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <div className="mb-8">
-            <h3 className="text-xl font-medium mb-5 text-[#1a1a1a]">Contact</h3>
+            <h3 className="text-xl font-medium mb-5 text-[#1a1a1a]">
+              Contact us.
+            </h3>
+            <p className="text-base text-[#2a2a2a] mb-4 font-light leading-relaxed">
+              We're always down for a chat about our ideas, future iterations,
+              or collaboration.
+            </p>
             <div className="space-y-2 text-base">
               <div>
                 <a
