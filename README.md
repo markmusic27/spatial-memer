@@ -25,7 +25,7 @@ CS & Math<br />
 <b>Filippo Fonseca</b><br />
 <a href="https://filippofonseca.com">filippofonseca.com</a><br />
 Yale<br />
-Mechanical Engineering (ABET) & EECS<br />
+Mech. Eng. (ABET) & EECS<br />
 <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
 </td>
 </tr>
