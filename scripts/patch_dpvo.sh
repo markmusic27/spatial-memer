@@ -48,5 +48,13 @@ else
     echo "  WARNING: $LIETORCH_CPU not found"
 fi
 
-echo "DPVO patching complete!"
+# File 4: calib/iphone.txt - Update camera calibration parameters
+IPHONE_CALIB="$DPVO_DIR/calib/iphone.txt"
+if [ -f "$IPHONE_CALIB" ]; then
+    echo "872.676 875.131 956.226 536.715 0.0 0.0 0.0 0.0" > "$IPHONE_CALIB"
+    echo "  Patched: $IPHONE_CALIB"
+else
+    echo "  WARNING: $IPHONE_CALIB not found"
+fi
 
+echo "DPVO patching complete!"
