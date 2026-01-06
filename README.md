@@ -41,7 +41,7 @@
       </td>
     </tr>
   </table>
-  <p>We're passionate about the intersection of AI and hardware through robotics — optimizing policies and models.</p>
+  <p>We're passionate about the intersection of AI and hardware through robotics. We seek to optimize policies and models - Spatial-MemER is a preview of what we know we can do.</p>
   <p>We strive to enable the future of embodied intelligence.</p>
 </div>
 
