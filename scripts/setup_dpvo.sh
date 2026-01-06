@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Capture script directory BEFORE any cd commands
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "=== DPVO Setup Script ==="
 
 # Check for --download-only flag (for testing on non-CUDA machines)
@@ -47,7 +50,6 @@ if ! command -v nvcc &> /dev/null; then
 fi
 
 # Apply PyTorch 2.x compatibility patches
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ -f "$SCRIPT_DIR/patch_dpvo.sh" ]; then
     echo "Applying PyTorch compatibility patches..."
     bash "$SCRIPT_DIR/patch_dpvo.sh" "$(pwd)"
