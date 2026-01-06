@@ -47,7 +47,7 @@ Results saved to:
 # Loop at 1Hz (in high-level policy):
 # 0. Get camera pose from DPVO
 rgb, depth = zed_camera.get_frame()
-robot_pose = localizer.update(rgb, depth, timestamp)
+robot_pose = localizer.update(rgb)
 
 if robot_pose is None: # None while DPVO initializes
     continue
