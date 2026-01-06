@@ -1,4 +1,4 @@
-# Spatial-MemER
+# `Spatial-MemER`
 
 <div align="center">
 
@@ -31,9 +31,9 @@ Mechanical Engineering (ABET) & EECS<br />
 </tr>
 </table>
 
-\_We're passionate about the intersection of AI and hardware through robotics—optimizing policies and models.
+We're passionate about the intersection of AI and hardware through robotics—optimizing policies and models.
 
-We strive to enable the future of embodied intelligence.\_
+We strive to enable the future of embodied intelligence.
 
 ---
 
