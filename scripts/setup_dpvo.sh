@@ -24,7 +24,10 @@ cd external/DPVO
 # Download Eigen if not present
 if [ ! -d "thirdparty/eigen-3.4.0" ]; then
     echo "Downloading Eigen..."
-    wget -nc https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip || true
+    mkdir -p thirdparty
+    if [ ! -f "eigen-3.4.0.zip" ]; then
+        curl -fLO https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
+    fi
     unzip -o eigen-3.4.0.zip -d thirdparty
 else
     echo "Eigen already downloaded"
@@ -63,7 +66,7 @@ pip install .
 # Download model weights if not present
 if [ ! -f "dpvo.pth" ]; then
     echo "Downloading model weights..."
-    wget -q --show-progress https://www.dropbox.com/s/nap0u8zslspdwm4/models.zip
+    curl -fLO https://www.dropbox.com/s/nap0u8zslspdwm4/models.zip
     unzip -o models.zip
     rm -f models.zip
 else
