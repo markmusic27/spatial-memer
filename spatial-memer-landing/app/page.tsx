@@ -33,13 +33,13 @@ export default function Home() {
               >
                 Mark Music
               </a>
-              <div className="mt-1 inline-flex items-center gap-2 text-sm text-[#6a6a6a]">
+              <div className="mt-2 flex flex-col items-center gap-1.5 text-sm text-[#6a6a6a]">
                 <img
                   src="/stanfordlogo.jpg"
                   alt="Stanford logo"
-                  className="h-4 w-4 object-contain"
+                  className="h-6 w-6 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
                 />
-                Stanford &apos;28
+                <span>Stanford &apos;28</span>
               </div>
             </div>
             <div className="text-center">
@@ -49,13 +49,13 @@ export default function Home() {
               >
                 Filippo Fonseca
               </a>
-              <div className="mt-1 inline-flex items-center gap-2 text-sm text-[#6a6a6a]">
+              <div className="mt-2 flex flex-col items-center gap-1.5 text-sm text-[#6a6a6a]">
                 <img
                   src="/yalelogo.png"
                   alt="Yale logo"
-                  className="h-4 w-4 object-contain"
+                  className="h-6 w-6 rounded-full border border-[#d8d6cb] bg-[#fafaf8] p-0.5 object-contain"
                 />
-                Yale &apos;28
+                <span>Yale &apos;28</span>
               </div>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function Home() {
               href="https://github.com/markmusic27/spatial-memer"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -81,7 +81,7 @@ export default function Home() {
               href="https://github.com/markmusic27/spatial-memer/tree/main/docs"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
             >
               <svg
                 className="w-4 h-4"
@@ -100,7 +100,7 @@ export default function Home() {
             </a>
             <a
               href="#"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
             >
               <svg
                 className="w-4 h-4"
@@ -119,7 +119,7 @@ export default function Home() {
             </a>
             <a
               href="#demo"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] hover:shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
             >
               <svg
                 className="w-4 h-4"

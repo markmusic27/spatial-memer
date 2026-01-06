@@ -75,7 +75,7 @@ Spatial-MemER extends vision-language robot policies (like MemER, RT-2) with exp
 # Install dependencies
 uv sync
 
-# (Optional) For mobile robots - install DPVO for visual odometry
+# For mobile robots - install DPVO for visual odometry
 ./scripts/setup_dpvo.sh
 ```
 
@@ -117,7 +117,7 @@ Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
 
 **Why no SLAM?** Precise actuators + stationary base = forward kinematics provides exact pose.
 
-### For Mobile Robots (Optional)
+### For Mobile Robots
 
 Robots with moving bases:
 
@@ -134,7 +134,7 @@ spatial-memer/
 ├── src/
 │   ├── robot_arm.py          # Forward kinematics (7-DOF robot arm)
 │   ├── spatial_context.py    # Spatial memory + map generation
-│   ├── localization.py       # DPVO wrapper for mobile robots (optional)
+│   ├── localization.py       # DPVO wrapper for mobile robots
 │   └── transforms.py         # SE(3) transformation utilities
 ├── scripts/
 │   ├── test_pose.py          # Test forward kinematics
