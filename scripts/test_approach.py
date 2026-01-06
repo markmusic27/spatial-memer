@@ -30,12 +30,12 @@ from transforms import pose_from_translation_quaternion
 TESTS = {
     "kitchen": {
         "video": "dataset/kitchen_body.mp4",
-        "poses": "results/kitchen/dpvo_poses.txt",
+        "poses": "results/kitchen/kitchen_poses.txt",
         "keyframes": ["00:23", "01:04", "01:30"],
     },
     "numbers": {
         "video": "dataset/numbers_body.mp4",
-        "poses": "results/numbers/dpvo_poses.txt",
+        "poses": "results/numbers/numbers_poses.txt",
         "keyframes": ["00:18", "00:48", "01:17", "01:34"],
     },
 }
@@ -123,8 +123,8 @@ def run_test(test_name: str, config: dict, output_dir: Path, project_root: Path)
     effective_pose_fps = num_poses / video_duration
     print(f"Loaded {num_poses} DPVO poses ({effective_pose_fps:.1f} poses/sec, ratio: {poses_per_frame:.3f})")
     
-    # Initialize spatial context
-    ctx = SpatialContext()
+    # Initialize spatial context (disable overlap avoidance for accurate positions)
+    ctx = SpatialContext(avoid_overlap=False)
     
     # Setup output video (map only)
     map_size = 512  # Output map size

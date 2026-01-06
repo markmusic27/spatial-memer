@@ -29,9 +29,10 @@ DEFAULT_MAP_CONFIG = MapConfig()
 
 
 class SpatialContext:
-    def __init__(self, relocalization: bool = False, map_config: MapConfig = None):
+    def __init__(self, relocalization: bool = False, map_config: MapConfig = None, avoid_overlap: bool = True):
         self.relocalization = relocalization
         self.map_config = map_config or DEFAULT_MAP_CONFIG
+        self.avoid_overlap = avoid_overlap
         
         # maps frame_id to SE(3) pose
         self.keyframe_poses: dict[int, np.ndarray] = {}
@@ -344,12 +345,13 @@ class SpatialContext:
             px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             
-            # resolve overlaps with robot and other keyframes
-            px, py = self._resolve_overlap(px, py, placed_circles, cfg.keyframe_radius)
-            
-            # clamp again after adjustment
-            px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
-            py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+            # resolve overlaps with robot and other keyframes (if enabled)
+            if self.avoid_overlap:
+                px, py = self._resolve_overlap(px, py, placed_circles, cfg.keyframe_radius)
+                
+                # clamp again after adjustment
+                px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
+                py = int(np.clip(py, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
             
             # add to placed circles
             placed_circles.append((px, py, cfg.keyframe_radius))
