@@ -383,7 +383,7 @@ This project builds on the MemER framework by Ajay Sridhar, Jennifer Pan, Satvik
 
 ## License
 
-MIT License. See our LICENSE file for details. Quite standard.
+Apache 2.0 License. See our LICENSE file for details. Quite standard.
 
 ## Contact
 
