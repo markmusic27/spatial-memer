@@ -339,7 +339,7 @@ class SpatialContext:
             x, y = positions[frame_id]
             
             px = center + int(x * scale)
-            py = center - int(y * scale)
+            py = center + int(y * scale)  # Note: DPVO Y axis is inverted from expected
             
             # clamp to border edge
             px = int(np.clip(px, cfg.border_size + cfg.keyframe_radius, cfg.image_size - cfg.border_size - cfg.keyframe_radius))
