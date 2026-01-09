@@ -2,7 +2,7 @@
 
 html {
   scroll-behavior: smooth;
-  background: #F5F4F0;
+  background: #FAFAF8;
 }
 
 :root {
@@ -12,7 +12,7 @@ html {
 
 body {
   font-family: var(--font-eb-garamond), Georgia, serif;
-  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.85), rgba(245, 244, 240, 0.6) 55%), #F5F4F0;
+  background: #FAFAF8;
   color: #1a1a1a;
   line-height: 1.7;
 }

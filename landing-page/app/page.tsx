@@ -159,7 +159,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
             href="https://jen-pan.github.io/memer/"
             className="text-[#1a1a1a] underline hover:text-[#4a4a4a] transition-colors"
           >
-            MemER: Memory-Enhanced Robot Policies
+            MemER: Scaling Up Memory for Robot Control via Experience Retrieval
           </a>
         </p>
 
@@ -198,6 +198,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
               icon={link.icon}
               label={link.label}
               newTab={link.newTab}
+              hideOnMobile={link.hideOnMobile}
             />
           ))}
         </div>

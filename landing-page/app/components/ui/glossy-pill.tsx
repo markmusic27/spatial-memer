@@ -8,6 +8,7 @@ interface GlossyPillProps {
   label: string;
   newTab?: boolean;
   size?: "sm" | "md";
+  hideOnMobile?: boolean;
 }
 
 export const GlossyPill: React.FC<GlossyPillProps> = ({
@@ -16,17 +17,22 @@ export const GlossyPill: React.FC<GlossyPillProps> = ({
   label,
   newTab,
   size = "md",
+  hideOnMobile = false,
 }) => {
   const sizeClasses = size === "sm" 
     ? "px-4 py-2 text-xs" 
     : "px-5 py-2.5 text-sm";
+
+  const displayClass = hideOnMobile 
+    ? "hidden md:inline-flex" 
+    : "inline-flex";
 
   return (
     <a
       href={href}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noreferrer" : undefined}
-      className={`glossy-pill inline-flex items-center gap-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} ${sizeClasses}`}
+      className={`glossy-pill ${displayClass} items-center gap-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} ${sizeClasses}`}
     >
       {icon}
       {label}

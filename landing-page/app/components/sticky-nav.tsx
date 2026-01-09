@@ -9,6 +9,7 @@ export type ActionLink = {
   label: string;
   icon: React.ReactNode;
   newTab?: boolean;
+  hideOnMobile?: boolean;
 };
 
 export const actionLinks: ActionLink[] = [
@@ -22,11 +23,13 @@ export const actionLinks: ActionLink[] = [
     href: "#data-collection",
     label: "Data Collection",
     icon: <DocsIcon />,
+    hideOnMobile: true,
   },
   {
     href: "#implementation",
     label: "Implement with MemER",
     icon: <PaperIcon />,
+    hideOnMobile: true,
   },
   {
     href: "#demo",
@@ -59,6 +62,7 @@ export const StickyNav: React.FC<StickyNavProps> = ({ isVisible }) => {
                 label={link.label}
                 newTab={link.newTab}
                 size="sm"
+                hideOnMobile={link.hideOnMobile}
               />
             ))}
           </div>
