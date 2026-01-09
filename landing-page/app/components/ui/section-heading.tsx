@@ -5,10 +5,9 @@ interface SectionHeadingProps {
   title: string;
 }
 
-export const SectionHeading: React.FC<SectionHeadingProps> = ({ icon, title }) => {
+export const SectionHeading: React.FC<SectionHeadingProps> = ({ title }) => {
   return (
-    <div className="flex items-center justify-center gap-2 mb-8">
-      {icon && <span className="text-[#1a1a1a]">{icon}</span>}
+    <div className="flex items-center justify-center mb-8">
       <h2 className="text-3xl font-medium text-[#1a1a1a] text-center">{title}</h2>
     </div>
   );

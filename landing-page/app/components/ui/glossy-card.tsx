@@ -25,7 +25,7 @@ interface FeatureCardProps {
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => {
   return (
-    <GlossyCard className="p-5">
+    <div className="glossy-card bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] rounded-lg p-5 font-[family-name:var(--font-eb-garamond)]">
       <div className="flex items-start gap-3 mb-2">
         <span className="mt-0.5 shrink-0 text-[#1a1a1a]">{icon}</span>
         <h3 className="text-base font-medium text-[#1a1a1a]">{title}</h3>
@@ -33,7 +33,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, descripti
       <p className="text-sm text-[#4a4a4a] font-light leading-relaxed ml-8">
         {description}
       </p>
-    </GlossyCard>
+    </div>
   );
 };
 
@@ -45,7 +45,7 @@ interface InfoCardProps {
 
 export const InfoCard: React.FC<InfoCardProps> = ({ icon, title, children }) => {
   return (
-    <GlossyCard className="p-5">
+    <div className="glossy-card bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] rounded-lg p-5 font-[family-name:var(--font-eb-garamond)]">
       <div className="flex items-start gap-3 mb-3">
         <span className="mt-0.5 shrink-0 text-[#1a1a1a]">{icon}</span>
         <div>
@@ -53,7 +53,7 @@ export const InfoCard: React.FC<InfoCardProps> = ({ icon, title, children }) => 
           {children}
         </div>
       </div>
-    </GlossyCard>
+    </div>
   );
 };
 
@@ -65,7 +65,7 @@ interface UseCaseCardProps {
 
 export const UseCaseCard: React.FC<UseCaseCardProps> = ({ icon, title, description }) => {
   return (
-    <GlossyCard className="p-5">
+    <div className="glossy-card bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] rounded-lg p-5 font-[family-name:var(--font-eb-garamond)]">
       <div className="flex items-start gap-3 mb-2">
         <span className="mt-0.5 shrink-0 text-[#1a1a1a]">{icon}</span>
         <div>
@@ -75,6 +75,6 @@ export const UseCaseCard: React.FC<UseCaseCardProps> = ({ icon, title, descripti
           </p>
         </div>
       </div>
-    </GlossyCard>
+    </div>
   );
 };

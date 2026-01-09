@@ -125,11 +125,6 @@ export default function Home() {
 
       <SectionDivider />
 
-      {/* BibTeX Citation */}
-      <CitationSection />
-
-      <SectionDivider />
-
       {/* Footer */}
       <FooterSection />
     </div>
@@ -559,7 +554,7 @@ function TestingSection() {
           />
         </div>
 
-        <div className="glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-[family-name:var(--font-geist)] rounded-lg">
+        <div className="glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-[family-name:var(--font-eb-garamond)] rounded-lg">
           <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 text-center">
             A Call for Benchmarking
           </h3>
