@@ -18,17 +18,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spatial-MemER: Spatial Memory for Embodied Robots",
-  description: "Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.",
-  keywords: ["robotics", "spatial memory", "VLM", "embodied AI", "robot learning"],
+  title: "Spatial-MemER",
+  description: "Spatial memory for hierarchical VLA policies",
+  keywords: ["robotics", "spatial memory", "robot memory", "VLA policies", "robot learning"],
   authors: [
     { name: "Mark Music", url: "https://markmusic.io" },
     { name: "Filippo Fonseca", url: "https://filippofonseca.com" }
   ],
   openGraph: {
-    title: "Spatial-MemER: Spatial Memory for Embodied Robots",
-    description: "Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.",
+    title: "Spatial-MemER",
+    description: "Spatial memory for hierarchical VLA policies.",
     type: "website",
+    images: [
+      {
+        url: "/thumbnail.png",
+        width: 1200,
+        height: 630,
+        alt: "Spatial memory for hierarchical VLA policies",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Spatial-MemER",
+    description: "Spatial memory for hierarchical VLA policies.",
+    images: ["/thumbnail.png"],
   },
 };
 
