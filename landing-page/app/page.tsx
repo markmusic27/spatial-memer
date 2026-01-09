@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import React, { useEffect, useRef, useState, type ChangeEvent } from "react";
+
+// Configurable UI font class
+const UI_FONT = "font-[family-name:var(--font-geist)]";
 
 type ActionLink = {
   href: string;
   label: string;
-  icon: JSX.Element;
+  icon: React.ReactNode;
   newTab?: boolean;
 };
 
@@ -97,8 +100,6 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isMuted, setIsMuted] = useState(false);
-
   useEffect(() => {
     const updateStickyNav = () => {
       if (!linkRowRef.current) {
@@ -135,15 +136,6 @@ export default function Home() {
     } else {
       videoRef.current.pause();
     }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) {
-      return;
-    }
-    const nextMuted = !videoRef.current.muted;
-    videoRef.current.muted = nextMuted;
-    setIsMuted(nextMuted);
   };
 
   const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
@@ -205,7 +197,7 @@ export default function Home() {
                   href={link.href}
                   target={link.newTab ? "_blank" : undefined}
                   rel={link.newTab ? "noreferrer" : undefined}
-                  className="glossy-pill inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] text-xs shadow-[2px_2px_5px_rgba(0,0,0,0.08),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+                  className={`glossy-pill inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#FAFAF8] text-[#1a1a1a] text-xs border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT}`}
                 >
                   {link.icon}
                   {link.label}
@@ -240,7 +232,7 @@ export default function Home() {
 
           {/* Authors */}
           <div className="flex flex-wrap justify-center gap-5 mb-8 text-base">
-            <div className="glossy-card group w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[2px_2px_6px_rgba(0,0,0,0.08),-2px_-2px_6px_rgba(255,255,255,0.7)] transition-transform">
+            <div className={`glossy-card group w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} transition-transform`}>
               <a
                 href="https://www.linkedin.com/in/markmusic27/"
                 target="_blank"
@@ -319,7 +311,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="glossy-card group w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[2px_2px_6px_rgba(0,0,0,0.08),-2px_-2px_6px_rgba(255,255,255,0.7)] transition-transform">
+            <div className={`glossy-card group w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} transition-transform`}>
               <a
                 href="https://www.linkedin.com/in/filippo-fonseca/"
                 target="_blank"
@@ -409,7 +401,7 @@ export default function Home() {
                 href={link.href}
                 target={link.newTab ? "_blank" : undefined}
                 rel={link.newTab ? "noreferrer" : undefined}
-                className="glossy-pill inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all text-sm shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)]"
+                className={`glossy-pill inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#FAFAF8] text-[#1a1a1a] transition-all text-sm border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT}`}
               >
                 {link.icon}
                 {link.label}
@@ -417,16 +409,6 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Cover Image */}
-          <div className="mt-10">
-            <div className="glossy-card relative overflow-hidden rounded-2xl bg-[#F1F0EA] border border-[#e3e1d6] shadow-[inset_2px_2px_8px_rgba(0,0,0,0.08),inset_-2px_-2px_8px_rgba(255,255,255,0.7),2px_2px_8px_rgba(0,0,0,0.08)]">
-              <img
-                src="/cover.png"
-                alt="Spatial-MemER cover"
-                className="w-full aspect-[16/9] object-contain bg-[#F1F0EA]"
-              />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -449,10 +431,10 @@ export default function Home() {
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
             />
-            <div className="video-controls">
+            <div className="video-controls font-(family-name:--font-geist-mono)">
               <button
                 type="button"
-                className="video-icon-button"
+                className={`video-icon-button ${!isPlaying ? "play-button" : ""}`}
                 onClick={togglePlay}
               >
                 {isPlaying ? "⏸" : "▶"}
@@ -471,13 +453,6 @@ export default function Home() {
                 }}
               />
               <span className="video-time">{formatTime(duration)}</span>
-              <button
-                type="button"
-                className="video-icon-button"
-                onClick={toggleMute}
-              >
-                {isMuted ? "🔇" : "🔊"}
-              </button>
               <button
                 type="button"
                 className="video-icon-button"
@@ -516,10 +491,10 @@ export default function Home() {
 
           {/* Key Features */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -540,10 +515,10 @@ export default function Home() {
                 changes
               </p>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -569,10 +544,10 @@ export default function Home() {
                 Forward kinematics-based pose estimation (no SLAM needed)
               </p>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -593,10 +568,10 @@ export default function Home() {
                 locations
               </p>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -632,10 +607,10 @@ export default function Home() {
             Why Spatial-MemER?
           </h2>
           <div className="space-y-8">
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-3">
                 <svg
-                  className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-6 h-6 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -659,10 +634,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-3">
                 <svg
-                  className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-6 h-6 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -686,10 +661,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-3">
                 <svg
-                  className="w-6 h-6 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-6 h-6 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -748,7 +723,7 @@ export default function Home() {
             <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
               Installation
             </h3>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`# Install dependencies
 uv sync
 
@@ -761,7 +736,7 @@ uv sync
             <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
               Basic Usage
             </h3>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`from spatial_context import SpatialContext
 
 # Initialize
@@ -823,7 +798,7 @@ ctx.promote_to_keyframe(frame_id)
             <p className="text-base text-[#4a4a4a] mb-4 font-light leading-relaxed">
               Robots clamped to a table with precise actuators:
             </p>
-            <div className="bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg p-6 mb-3">
+            <div className="bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg p-6 mb-3">
               <pre className="text-center font-mono text-sm overflow-x-auto text-[#2a2a2a] leading-relaxed">
                 <code>{`Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
     (7-DOF)         (SE(3) 4×4)        (World)      (Egocentric BEV)`}</code>
@@ -842,7 +817,7 @@ ctx.promote_to_keyframe(frame_id)
             <p className="text-base text-[#4a4a4a] mb-4 font-light leading-relaxed">
               Robots with moving bases:
             </p>
-            <div className="bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.1),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg p-6">
+            <div className="bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg p-6">
               <pre className="text-center font-mono text-sm overflow-x-auto text-[#2a2a2a] leading-relaxed">
                 <code>{`RGB Frames → DPVO (Deep Patch Visual Odometry) → Robot Pose (World) + FK → Spatial Map`}</code>
               </pre>
@@ -882,7 +857,7 @@ ctx.promote_to_keyframe(frame_id)
             <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
               Stationary Robot Example
             </h3>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`from spatial_context import SpatialContext
 import numpy as np
 
@@ -915,7 +890,7 @@ cv2.waitKey(0)`}</code>
             <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
               Integration with MemER
             </h3>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`# Existing MemER loop (simplified)
 for timestep in episode:
     observation = env.get_observation()
@@ -961,10 +936,10 @@ for timestep in episode:
             </h2>
           </div>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -986,10 +961,10 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1011,10 +986,10 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1036,10 +1011,10 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1061,10 +1036,10 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1086,10 +1061,10 @@ for timestep in episode:
                 </div>
               </div>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <div className="flex items-start gap-3 mb-2">
                 <svg
-                  className="w-5 h-5 mt-0.5 flex-shrink-0 text-[#1a1a1a]"
+                  className="w-5 h-5 mt-0.5 shrink-0 text-[#1a1a1a]"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1156,7 +1131,7 @@ for timestep in episode:
           </p>
 
           <div className="grid md:grid-cols-3 gap-4 mb-8">
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
                 Spatial Recall
               </h3>
@@ -1165,7 +1140,7 @@ for timestep in episode:
                 measure memory persistence and drift.
               </p>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
                 Map Consistency
               </h3>
@@ -1174,7 +1149,7 @@ for timestep in episode:
                 stability under repeated viewpoints.
               </p>
             </div>
-            <div className="glossy-card p-5 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+            <div className={`glossy-card p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
               <h3 className="text-base font-medium text-[#1a1a1a] mb-2">
                 Policy Impact
               </h3>
@@ -1185,7 +1160,7 @@ for timestep in episode:
             </div>
           </div>
 
-          <div className="glossy-card p-6 bg-[#FAFAF8] shadow-[2px_2px_5px_rgba(0,0,0,0.1),-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg">
+          <div className={`glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} rounded-lg`}>
             <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 text-center">
               A Call for Benchmarking
             </h3>
@@ -1231,7 +1206,7 @@ for timestep in episode:
             <p className="text-base text-[#2a2a2a] mb-4 font-light leading-relaxed">
               If you use Spatial-MemER in your research, please cite:
             </p>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`@software{spatial_memer_2026,
   title = {Spatial-MemER: Spatial Memory for Embodied Robots},
   author = {Music, Mark and Fonseca, Filippo},
@@ -1252,7 +1227,7 @@ for timestep in episode:
               </a>
               :
             </p>
-            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.15),inset_-2px_-2px_5px_rgba(255,255,255,0.7)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
+            <pre className="overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a]">
               <code>{`@article{sridhar2024memer,
   title = {MemER: Memory-Enhanced Robot Policies},
   author = {Sridhar, Ajay and Pan, Jennifer and Sharma, Satvik and Finn, Chelsea},
