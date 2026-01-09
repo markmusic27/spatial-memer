@@ -18,30 +18,30 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spatial-MemER",
-  description: "Spatial memory for hierarchical VLA policies",
-  keywords: ["robotics", "spatial memory", "robot memory", "VLA policies", "robot learning"],
+  title: "Spatial-MemER: Spatial Memory for Hierarchical VLA Policies",
+  description: "Augmenting VLA policies with egocentric spatial context for long-horizon robot manipulation",
+  keywords: ["robotics", "spatial memory", "robot memory", "VLA policies", "robot learning", "manipulation", "egocentric mapping", "MemER", "vision-language-action"],
   authors: [
     { name: "Mark Music", url: "https://markmusic.io" },
     { name: "Filippo Fonseca", url: "https://filippofonseca.com" }
   ],
   openGraph: {
-    title: "Spatial-MemER",
-    description: "Spatial memory for hierarchical VLA policies.",
+    title: "Spatial-MemER: Spatial Memory for Hierarchical VLA Policies",
+    description: "Augmenting VLA policies with egocentric spatial context for long-horizon robot manipulation.",
     type: "website",
     images: [
       {
         url: "/thumbnail.png",
         width: 1200,
         height: 630,
-        alt: "Spatial memory for hierarchical VLA policies",
+        alt: "Spatial-MemER: Spatial memory for hierarchical VLA policies",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Spatial-MemER",
-    description: "Spatial memory for hierarchical VLA policies.",
+    title: "Spatial-MemER: Spatial Memory for Hierarchical VLA Policies",
+    description: "Augmenting VLA policies with egocentric spatial context for long-horizon robot manipulation.",
     images: ["/thumbnail.png"],
   },
 };
