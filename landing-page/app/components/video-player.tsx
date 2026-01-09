@@ -61,6 +61,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
         className="video-frame"
         src={src}
         playsInline
+        autoPlay
+        loop
+        muted
         onClick={togglePlay}
         onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
         onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}

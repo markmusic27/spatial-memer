@@ -209,23 +209,46 @@ mark {
 }
 
 @media (max-width: 640px) {
-  .video-controls {
+  .video-shell {
     gap: 10px;
-    padding: 10px 14px;
+  }
+
+  .video-frame {
+    border-radius: 8px;
+  }
+
+  .video-controls {
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
   }
 
   .video-controls .video-time:last-of-type {
     display: none;
   }
 
-  .video-controls button:last-of-type {
-    display: none;
+  .video-icon-button {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 
-  .video-icon-button {
-    width: 34px;
-    height: 34px;
-    font-size: 14px;
+  .video-time {
+    font-size: 0.8rem;
+  }
+
+  .video-range::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .video-range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  #demo {
+    padding-top: 0;
   }
 }
 

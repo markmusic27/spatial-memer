@@ -147,7 +147,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
           Spatial-MemER
         </h1>
         <h2 className="text-2xl md:text-3xl font-light mb-6 text-[#4a4a4a] leading-[1.3]">
-          Open-Source Spatial Memory for Embodied Robots.
+          Spatial memory for hierarchical VLA policies.
         </h2>
         <p className="text-lg md:text-xl text-[#2a2a2a] mb-4 leading-relaxed font-light">
           Adding and imbuing spatial awareness to vision-language robot policies
@@ -164,7 +164,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
         </p>
 
         {/* Authors */}
-        <div className="flex flex-wrap justify-center gap-5 mb-8 text-base">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-5 mb-8 text-base">
           <AuthorCard
             name="Mark Music"
             imageUrl="https://markmusic.notion.site/image/attachment%3Aa0fd4fee-5d6a-4c90-b9e0-b69387933ebd%3AFrame_2.png?id=1ceb37de-b65d-801a-ac5c-d1c7314f1a35&table=block&spaceId=1836a043-9d61-47b3-af19-484cf61d0f91&width=250&userId=&cache=v2"
@@ -190,7 +190,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
         </div>
 
         {/* Links */}
-        <div ref={linkRowRef} className="flex flex-wrap justify-center gap-3">
+        <div ref={linkRowRef} className="flex flex-wrap justify-center gap-2 md:gap-3">
           {actionLinks.map((link) => (
             <GlossyPill
               key={link.label}
@@ -198,7 +198,6 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
               icon={link.icon}
               label={link.label}
               newTab={link.newTab}
-              hideOnMobile={link.hideOnMobile}
             />
           ))}
         </div>
@@ -555,7 +554,7 @@ function TestingSection() {
           />
         </div>
 
-        <div className="glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-[family-name:var(--font-eb-garamond)] rounded-lg">
+        <div className="glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-(family-name:--font-eb-garamond) rounded-lg">
           <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 text-center">
             A Call for Benchmarking
           </h3>

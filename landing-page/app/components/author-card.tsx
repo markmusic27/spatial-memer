@@ -43,7 +43,7 @@ export const AuthorCard: React.FC<AuthorCardProps> = ({
 
   return (
     <div
-      className={`glossy-card group w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} transition-transform`}
+      className={`glossy-card group w-[162px] sm:w-[180px] rounded-2xl bg-[#FAFAF8] border border-[#e3e1d6] shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${UI_FONT} transition-transform`}
     >
       <a
         href={githubUrl || linkedInUrl}
