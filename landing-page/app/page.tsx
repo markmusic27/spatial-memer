@@ -53,30 +53,6 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    const elements = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]")
-    );
-    if (!("IntersectionObserver" in window)) {
-      elements.forEach((element) => element.classList.add("is-visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
-    );
-
-    elements.forEach((element) => observer.observe(element));
-    return () => observer.disconnect();
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
@@ -141,7 +117,7 @@ interface HeroSectionProps {
 
 function HeroSection({ linkRowRef }: HeroSectionProps) {
   return (
-    <section data-reveal className="pt-16 pb-12 px-6">
+    <section className="pt-16 pb-12 px-6">
       <div className="max-w-3xl mx-auto text-center">
         <h1 className="text-5xl md:text-6xl font-medium mb-4 text-[#1a1a1a] tracking-tight leading-[1.1]">
           Spatial-MemER
@@ -230,7 +206,7 @@ function DemoSection() {
 
 function OverviewSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-medium mb-6 text-[#1a1a1a] text-center">
           Overview
@@ -278,7 +254,7 @@ function OverviewSection() {
 
 function WhySection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
           Why Spatial-MemER?
@@ -319,7 +295,7 @@ function WhySection() {
 
 function QuickStartSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading icon={<BoltIcon className="w-7 h-7" />} title="Quick Start" />
 
@@ -372,7 +348,7 @@ ctx.promote_to_keyframe(frame_id)
 
 function ArchitectureSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading icon={<ArchiveIcon />} title="Architecture" />
 
@@ -411,7 +387,7 @@ function ArchitectureSection() {
 
 function CodeExamplesSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading icon={<CodeIcon className="w-7 h-7" />} title="Code Examples" />
 
@@ -475,7 +451,7 @@ for timestep in episode:
 
 function UseCasesSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading icon={<ClipboardCheckIcon />} title="Use Cases" />
 
@@ -522,7 +498,7 @@ function UseCasesSection() {
 
 function TestingSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading
           icon={<CheckCircleIcon />}
@@ -578,7 +554,7 @@ function TestingSection() {
 
 function CitationSection() {
   return (
-    <section data-reveal className="py-8 px-6">
+    <section className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <SectionHeading icon={<ChatIcon />} title="Citation" />
 
@@ -622,7 +598,7 @@ function CitationSection() {
 
 function FooterSection() {
   return (
-    <footer data-reveal className="py-10 px-6">
+    <footer className="py-10 px-6">
       <div className="max-w-3xl mx-auto text-center">
         <div className="mb-8">
           <h3 className="text-xl font-medium mb-5 text-[#1a1a1a]">

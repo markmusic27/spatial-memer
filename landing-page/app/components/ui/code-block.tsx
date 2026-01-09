@@ -8,9 +8,15 @@ interface CodeBlockProps {
 export const CodeBlock: React.FC<CodeBlockProps> = ({ children, centered = false }) => {
   return (
     <pre
-      className={`overflow-x-auto p-5 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] rounded-lg font-mono text-sm leading-relaxed text-[#1a1a1a] ${
+      className={`overflow-x-auto p-5 rounded-lg font-mono text-sm leading-relaxed ${
         centered ? "text-center" : ""
       }`}
+      style={{
+        background: "#F5F0E8",
+        color: "#443221",
+        border: "1px solid #EAE0DA",
+        boxShadow: "inset 0 1px 2px rgba(0,0,0,0)",
+      }}
     >
       <code>{children}</code>
     </pre>
