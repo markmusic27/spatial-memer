@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { EB_Garamond, Geist_Mono } from "next/font/google";
+import { EB_Garamond, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
+  subsets: ["latin"],
+});
+
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
 });
 
@@ -33,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${ebGaramond.variable} ${geistMono.variable}`}>
+    <html lang="en" className={`${ebGaramond.variable} ${geist.variable} ${geistMono.variable}`}>
       <body className="antialiased">
         {children}
       </body>
