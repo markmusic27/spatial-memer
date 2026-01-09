@@ -133,6 +133,8 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
           Extending{" "}
           <a
             href="https://jen-pan.github.io/memer/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-[#1a1a1a] underline hover:text-[#4a4a4a] transition-colors"
           >
             MemER: Scaling Up Memory for Robot Control via Experience Retrieval

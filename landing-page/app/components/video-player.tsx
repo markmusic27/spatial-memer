@@ -13,6 +13,19 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   const [duration, setDuration] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Initialize video state if already loaded
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      // Check if metadata is already available
+      if (video.readyState >= 1 && video.duration) {
+        setDuration(video.duration);
+        setCurrentTime(video.currentTime);
+        setIsPlaying(!video.paused);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       const fullscreenElement =
@@ -113,6 +126,12 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
         onClick={togglePlay}
         onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
         onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+        onDurationChange={(event) => setDuration(event.currentTarget.duration)}
+        onCanPlay={(event) => {
+          if (!duration && event.currentTarget.duration) {
+            setDuration(event.currentTarget.duration);
+          }
+        }}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       />
