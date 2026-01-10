@@ -204,7 +204,12 @@ function DemoSection() {
       <div className="max-w-3xl mx-auto">
         <VideoPlayer src="/demo.mp4" />
         <p className="text-center text-[#4a4a4a] text-base font-light max-w-2xl mx-auto leading-relaxed">
-        Proof of concept: no robot, no problem. We validated the approach using a chest-mounted camera, single-DOF arm constraints, and manual FK from video.
+        We didn't have a robot... so we used a chest-mounted iPhone 16 Pro running DPVO for localization, constrained Mark's arm to a single DOF with 45° discretized joint angles, and computed FK manually from video. Keyframes and subtasks are simulated based on what we expect MemER would output.
+
+
+
+
+
 
 
         </p>
