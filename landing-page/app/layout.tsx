@@ -18,6 +18,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+  ),
   title: "Spatial-MemER: Spatial Memory for Hierarchical VLA Policies",
   description: "Augmenting VLA policies with egocentric spatial context for long-horizon robot manipulation",
   keywords: ["robotics", "spatial memory", "robot memory", "VLA policies", "robot learning", "manipulation", "egocentric mapping", "MemER", "vision-language-action"],
