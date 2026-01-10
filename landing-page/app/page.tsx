@@ -136,7 +136,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
           >
             DPVO
           </a>{" "}
-          and forward kinematics, rendered as a bird's-eye map the VLM can directly perceive.
+          and forward kinematics, rendered as a bird's-eye map the high-level policy (VLM) can directly perceive.
         </p>
         <p className="text-base text-[#6a6a6a] mb-8 italic">
           Extending{" "}

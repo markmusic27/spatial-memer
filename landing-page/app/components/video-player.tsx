@@ -7,6 +7,7 @@ interface VideoPlayerProps {
 }
 
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -73,7 +74,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   const handleFullscreen = () => {
-    if (!videoRef.current) {
+    if (!containerRef.current) {
       return;
     }
 
@@ -84,8 +85,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
       webkitExitFullscreen?: () => void;
     };
 
-    const video = videoRef.current as HTMLVideoElement & {
-      webkitEnterFullscreen?: () => void;
+    const container = containerRef.current as HTMLDivElement & {
       webkitRequestFullscreen?: () => Promise<void>;
     };
 
@@ -98,23 +98,16 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
         doc.webkitExitFullscreen();
       }
     } else {
-      // Try standard API first
-      if (video.requestFullscreen) {
-        video.requestFullscreen();
-      } 
-      // iOS Safari - video element specific method
-      else if (video.webkitEnterFullscreen) {
-        video.webkitEnterFullscreen();
-      }
-      // Older webkit browsers
-      else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
       }
     }
   };
 
   return (
-    <div className="video-shell">
+    <div ref={containerRef} className="video-shell">
       <video
         ref={videoRef}
         className="video-frame"
