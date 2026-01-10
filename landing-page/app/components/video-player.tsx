@@ -28,17 +28,29 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   }, []);
 
   useEffect(() => {
+    const video = videoRef.current;
+
     const handleFullscreenChange = () => {
       const fullscreenElement =
         document.fullscreenElement ||
         (document as unknown as { webkitFullscreenElement?: Element }).webkitFullscreenElement;
       setIsFullscreen(!!fullscreenElement);
     };
+
+    // iOS Safari fires these events on the video element
+    const handleiOSFullscreenStart = () => setIsFullscreen(true);
+    const handleiOSFullscreenEnd = () => setIsFullscreen(false);
+
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    video?.addEventListener("webkitbeginfullscreen", handleiOSFullscreenStart);
+    video?.addEventListener("webkitendfullscreen", handleiOSFullscreenEnd);
+
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      video?.removeEventListener("webkitbeginfullscreen", handleiOSFullscreenStart);
+      video?.removeEventListener("webkitendfullscreen", handleiOSFullscreenEnd);
     };
   }, []);
 
@@ -74,9 +86,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   const progressPercent = duration ? (currentTime / duration) * 100 : 0;
 
   const handleFullscreen = () => {
-    if (!containerRef.current) {
-      return;
-    }
+    const video = videoRef.current as HTMLVideoElement & {
+      webkitEnterFullscreen?: () => void;
+      webkitExitFullscreen?: () => void;
+      webkitDisplayingFullscreen?: boolean;
+    };
 
     const doc = document as unknown as {
       fullscreenElement?: Element;
@@ -98,10 +112,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
         doc.webkitExitFullscreen();
       }
     } else {
-      if (container.requestFullscreen) {
+      // Try container fullscreen first (works on desktop)
+      if (container?.requestFullscreen) {
         container.requestFullscreen();
-      } else if (container.webkitRequestFullscreen) {
+      } else if (container?.webkitRequestFullscreen) {
         container.webkitRequestFullscreen();
+      } else if (video?.webkitEnterFullscreen) {
+        // iOS Safari: use video element's native fullscreen
+        video.webkitEnterFullscreen();
       }
     }
   };

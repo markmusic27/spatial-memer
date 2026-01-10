@@ -15,6 +15,8 @@ body {
   background: #FAFAF8;
   color: #1a1a1a;
   line-height: 1.7;
+  touch-action: pan-y;
+  overscroll-behavior-x: none;
 }
 
 code {
@@ -119,6 +121,7 @@ mark {
   border: 1px solid #e8e7e0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .video-controls {
@@ -174,6 +177,7 @@ mark {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 .video-icon-button.play-button {
@@ -193,6 +197,7 @@ mark {
   border-radius: 999px;
   background: linear-gradient(90deg, var(--highlight-yellow) 0%, rgba(214, 212, 202, 0.7) 0%);
   cursor: pointer;
+  touch-action: none;
 }
 
 .video-range::-webkit-slider-thumb {
