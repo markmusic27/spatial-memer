@@ -71,18 +71,13 @@ export default function Home() {
 
       <SectionDivider />
 
-      {/* Overview Section */}
-      <OverviewSection />
+      {/* Architecture */}
+      <ArchitectureSection />
 
       <SectionDivider />
 
       {/* Quick Start Code */}
       <QuickStartSection />
-
-      <SectionDivider />
-
-      {/* Architecture */}
-      <ArchitectureSection />
 
       <SectionDivider />
 
