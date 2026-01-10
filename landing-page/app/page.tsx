@@ -159,7 +159,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
             school="Stanford"
             schoolLogo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png"
             schoolYear="28"
-            major="CS + Math"
+            major="CS (AI track) + Math"
             websiteUrl="https://markmusic.io"
             githubUrl="https://github.com/markmusic27"
           />
@@ -266,7 +266,7 @@ function OverviewSection() {
 function WhySection() {
   return (
     <section className="py-8 px-6">
-      <div className="max-w-[810px] mx-auto px-6">
+      <div className="max-w-[810px] mx-auto px-1 md:px-6">
         <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
           Why Spatial-MemER?
         </h2>
