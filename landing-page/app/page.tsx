@@ -66,13 +66,13 @@ export default function Home() {
 
       <SectionDivider />
 
-      {/* Overview Section */}
-      <OverviewSection />
+      {/* Why Section */}
+      <WhySection />
 
       <SectionDivider />
 
-      {/* Why Section */}
-      <WhySection />
+      {/* Overview Section */}
+      <OverviewSection />
 
       <SectionDivider />
 
@@ -205,13 +205,6 @@ function DemoSection() {
         <VideoPlayer src="/demo.mp4" />
         <p className="text-center text-[#4a4a4a] text-base font-light max-w-2xl mx-auto leading-relaxed">
         We didn't have a robot... so we used a chest-mounted iPhone 16 Pro running DPVO for localization, constrained Mark's arm to a single DOF with 45° discretized joint angles, and computed FK manually from video. Keyframes and subtasks are simulated based on what we expect MemER would output.
-
-
-
-
-
-
-
         </p>
       </div>
     </section>
@@ -224,7 +217,7 @@ function DemoSection() {
 
 function OverviewSection() {
   return (
-    <section className="py-8 px-6">
+    <section id="overview" className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-3xl font-medium mb-6 text-[#1a1a1a] text-center">
           Overview
@@ -273,34 +266,62 @@ function OverviewSection() {
 function WhySection() {
   return (
     <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-[810px] mx-auto px-6">
         <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
           Why Spatial-MemER?
         </h2>
-        <div className="space-y-8">
-          <InfoCard icon={<WarningIcon />} title="Problem">
-            <p className="text-base text-[#2a2a2a] leading-relaxed font-light">
-              Existing vision-language policies like MemER lack spatial
-              understanding. They see sequential images but don&apos;t know
-              WHERE observations occurred in space.
-            </p>
-          </InfoCard>
+        
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            Humans don't just remember <em>what</em> they saw — they remember <em>where</em> they saw it. 
+            Think about making a sandwich: you recall the pan, but also that it's in the cabinet left 
+            of the stove. Spatial context is inseparable from visual memory.
+          </p>
 
-          <InfoCard icon={<LightbulbIcon />} title="Solution">
-            <ul className="space-y-2 text-base text-[#2a2a2a] font-light leading-relaxed">
-              <li>• Spatial map showing robot + keyframe locations</li>
-              <li>• Watermarked keyframes color-coded to map markers</li>
-              <li>• Pose tracking using forward kinematics</li>
-            </ul>
-          </InfoCard>
+          <p>
+            MemER partially captures this through its exocentric camera, which observes the robot arm from 
+            a third-person view. But this approach has limits:
+          </p>
 
-          <InfoCard icon={<BoltIcon />} title="Impact">
-            <p className="text-base text-[#2a2a2a] leading-relaxed font-light">
-              Enables spatial reasoning tasks like &quot;Go back to where you
-              saw the cup&quot; and &quot;Move to the left of the red
-              block&quot;.
-            </p>
-          </InfoCard>
+          <ol className="list-none space-y-3 pl-1">
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">1.</span>
+              <span>
+                VLMs struggle with 3D spatial reasoning, particularly in multi-view contexts where reasoning 
+                complexity increases and models become more prone to hallucinations{" "}
+                <a
+                  href="https://arxiv.org/abs/2509.18905"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
+                >(Yu et al., 2025)</a>. This extends to occlusions and viewpoint-dependent relations like 
+                "behind" or "in front of."
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">2.</span>
+              <span>
+                It breaks down entirely when the robot can move and explore: the exocentric frame 
+                no longer anchors anything.
+              </span>
+            </li>
+          </ol>
+
+          <p>
+            We wanted to give the policy explicit spatial context through an egocentric map — a direct 
+            visual representation of where keyframes were captured relative to the robot's current pose.{" "}
+            <a
+              href="#overview"
+              className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
+            >More on the mechanism below.</a>
+          </p>
+
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">This is a starting point.</strong> Explicit 
+            maps are interpretable and easy to integrate, but we're ultimately interested in whether spatial 
+            context could be encoded implicitly — analogous to how positional embeddings like RoPE encode 
+            token position in text. Could we learn spatial encodings over visual tokens?
+          </p>
         </div>
       </div>
     </section>
