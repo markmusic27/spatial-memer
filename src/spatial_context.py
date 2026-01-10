@@ -374,6 +374,25 @@ class SpatialContext:
                         cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
             cv2.putText(image, label, (text_x, text_y - 1),
                         cv2.FONT_HERSHEY_SIMPLEX, cfg.font_scale, (0, 0, 0), 1, cv2.LINE_AA)
+            
+            # draw orientation arrow showing camera direction at this keyframe
+            rel_pose = compute_relative_pose(current_pose, self.keyframe_poses[frame_id])
+            rotation = rel_pose[:3, :3]
+            # camera forward is Z-axis (third column of rotation matrix)
+            forward = rotation[:, 2]
+            # project onto XY plane for BEV
+            fwd_x, fwd_y = forward[0], forward[1]
+            length = np.sqrt(fwd_x**2 + fwd_y**2)
+            if length > 1e-6:
+                fwd_x, fwd_y = fwd_x / length, fwd_y / length
+                arrow_len = cfg.keyframe_radius + 8
+                # start arrow from corner of square in the direction of the arrow
+                start_x = px + int(fwd_x * half * 0.7)
+                start_y = py + int(fwd_y * half * 0.7)
+                end_x = start_x + int(fwd_x * arrow_len)
+                end_y = start_y + int(fwd_y * arrow_len)
+                cv2.arrowedLine(image, (start_x, start_y), (end_x, end_y),
+                                (0, 0, 0), 2, cv2.LINE_AA, tipLength=0.35)
         
         # draw robot at center
         cv2.circle(image, (center, center), cfg.robot_radius, (180, 180, 180), -1)
