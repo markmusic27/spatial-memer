@@ -7,6 +7,7 @@ import { GithubIcon, DocsIcon, PaperIcon, PlayCircleIcon } from "./icons";
 export type ActionLink = {
   href: string;
   label: string;
+  mobileLabel?: string;
   icon: React.ReactNode;
   newTab?: boolean;
   hideOnMobile?: boolean;
@@ -20,21 +21,22 @@ export const actionLinks: ActionLink[] = [
     icon: <GithubIcon />,
   },
   {
+    href: "#demo",
+    label: "Watch Demo",
+    icon: <PlayCircleIcon />,
+  },
+  {
     href: "#data-collection",
-    label: "Data Collection",
+    label: "How We Collected Data (No Robot)",
+    mobileLabel: "Data Collection (No Robot)",
     icon: <DocsIcon />,
     hideOnMobile: true,
   },
   {
     href: "#implementation",
-    label: "Implement with MemER",
+    label: "Integration with MemER",
     icon: <PaperIcon />,
     hideOnMobile: true,
-  },
-  {
-    href: "#demo",
-    label: "Demo",
-    icon: <PlayCircleIcon />,
   },
 ];
 
@@ -60,6 +62,7 @@ export const StickyNav: React.FC<StickyNavProps> = ({ isVisible }) => {
                 href={link.href}
                 icon={link.icon}
                 label={link.label}
+                mobileLabel={link.mobileLabel}
                 newTab={link.newTab}
                 size="sm"
                 hideOnMobile={link.hideOnMobile}

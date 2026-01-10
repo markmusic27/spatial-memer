@@ -126,8 +126,17 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
           Spatial memory for hierarchical VLA policies.
         </h2>
         <p className="text-lg md:text-xl text-[#2a2a2a] mb-4 leading-relaxed font-light">
-          Adding and imbuing spatial awareness to vision-language robot policies
-          through egocentric mapping and forward kinematics.
+          MemER's keyframes capture <em>what</em> the robot saw — but not <em>where</em>. 
+          We add egocentric spatial context by computing camera poses via{" "}
+          <a
+            href="https://arxiv.org/abs/2208.04726"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-1 underline-offset-2"
+          >
+            DPVO
+          </a>{" "}
+          and forward kinematics, rendered as a bird's-eye map the VLM can directly perceive.
         </p>
         <p className="text-base text-[#6a6a6a] mb-8 italic">
           Extending{" "}
@@ -168,13 +177,14 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
         </div>
 
         {/* Links */}
-        <div ref={linkRowRef} className="flex flex-wrap justify-center gap-2 md:gap-3">
+        <div ref={linkRowRef} className="flex flex-wrap justify-center gap-2 md:gap-2 w-[115%] -ml-[7.5%]">
           {actionLinks.map((link) => (
             <GlossyPill
               key={link.label}
               href={link.href}
               icon={link.icon}
               label={link.label}
+              mobileLabel={link.mobileLabel}
               newTab={link.newTab}
             />
           ))}
@@ -194,8 +204,9 @@ function DemoSection() {
       <div className="max-w-3xl mx-auto">
         <VideoPlayer src="/demo.mp4" />
         <p className="text-center text-[#4a4a4a] text-base font-light max-w-2xl mx-auto leading-relaxed">
-          Spatial-MemER enables robots to maintain spatial awareness of where
-          they observed objects in 3D space, not just what they saw.
+        Proof of concept: no robot, no problem. We validated the approach using a chest-mounted camera, single-DOF arm constraints, and manual FK from video.
+
+
         </p>
       </div>
     </section>
