@@ -80,18 +80,8 @@ export default function Home() {
 
       <SectionDivider />
 
-      {/* More Code Examples */}
-      <CodeExamplesSection />
-
-      <SectionDivider />
-
-      {/* Use Cases */}
-      <UseCasesSection />
-
-      <SectionDivider />
-
-      {/* Testing & Validation */}
-      <TestingSection />
+      {/* Next Steps */}
+      <NextStepsSection />
 
       <SectionDivider />
 
@@ -148,7 +138,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
         <div className="flex flex-wrap justify-center gap-2 sm:gap-5 mb-8 text-base">
           <AuthorCard
             name="Mark Music"
-            imageUrl="https://markmusic.notion.site/image/attachment%3Aa0fd4fee-5d6a-4c90-b9e0-b69387933ebd%3AFrame_2.png?id=1ceb37de-b65d-801a-ac5c-d1c7314f1a35&table=block&spaceId=1836a043-9d61-47b3-af19-484cf61d0f91&width=250&userId=&cache=v2"
+            imageUrl="/mark.png"
             linkedInUrl="https://www.linkedin.com/in/markmusic27/"
             school="Stanford"
             schoolLogo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png"
@@ -528,165 +518,79 @@ ctx.promote_to_keyframe(frame_id)
 }
 
 // ============================================================================
-// Code Examples Section
+// Next Steps Section
 // ============================================================================
 
-function CodeExamplesSection() {
+function NextStepsSection() {
   return (
     <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <SectionHeading icon={<CodeIcon className="w-7 h-7" />} title="Code Examples" />
+      <div className="max-w-[810px] mx-auto px-1 md:px-6">
+        <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
+          Next Steps
+        </h2>
 
-        <div className="mb-8">
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            Stationary Robot Example
-          </h3>
-          <CodeBlock>{`from spatial_context import SpatialContext
-import numpy as np
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">Data collection without a robot.</strong> We didn't have access to a robot arm, so we improvised. Mark wore a chest-mounted iPhone 16 Pro and a wrist-mounted GoPro, constrained his arm to a single degree of freedom with 45° discretized joint angles, and performed kitchen tasks while we recorded. DPVO ran on the chest camera for localization; we computed FK manually from video. It's scrappy, but it validated the full pipeline: localization, pose storage, map generation, and keyframe correspondence all work end-to-end.
+          </p>
 
-# Initialize spatial memory
-ctx = SpatialContext()
+          {/* Polaroid Image */}
+          <div className="flex justify-center my-8">
+            <div className="bg-white p-3 pb-12 shadow-[0_4px_20px_rgba(0,0,0,0.12)] rotate-1 hover:rotate-0 transition-transform duration-300">
+              <img
+                src="/data_collection.png"
+                alt="Data collection setup"
+                className="w-full max-w-[400px]"
+              />
+              <p className="text-center text-[#4a4a4a] text-sm font-light mt-3 italic px-2">
+                Data collection rig: iPhone 16 Pro (chest) for DPVO localization, GoPro (wrist) as egocentric camera, and one very patient arm.
+              </p>
+            </div>
+          </div>
 
-# Simulate robot motion
-for timestep in range(50):
-    # Get robot state (joint angles in radians)
-    joint_angles = robot.get_joint_angles()  # 7-element array
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">Finetuning for spatial dependence.</strong> The risk with adding spatial context is that the VLM ignores it. If the exocentric camera already provides enough information to complete the task, the model has no incentive to attend to the map. To force spatial dependence, we plan to finetune Qwen on tasks where the map is necessary: objects that aren't visible in any current frame, disambiguation between identical objects in different locations, and navigation-first tasks where the robot must move before it can see what it needs. The training signal should make it impossible to succeed without using spatial context.
+          </p>
 
-    # Add frame (computes pose via forward kinematics)
-    frame_id = ctx.add_frame(joint_angles)
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">What we want to test:</strong>
+          </p>
 
-    # Promote every 10th frame to keyframe
-    if timestep % 10 == 0:
-        ctx.promote_to_keyframe(frame_id)
+          <ol className="list-none space-y-3 pl-1">
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">1.</span>
+              <span>
+                <em>Does spatial context hurt when unnecessary?</em> We need ablations on standard MemER tasks to ensure the map doesn't degrade performance when spatial reasoning isn't required.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">2.</span>
+              <span>
+                <em>Does it help when it should?</em> We want to evaluate on tasks designed to require spatial reasoning: mobile robots navigating between rooms, cluttered stationary environments, and return-to-location tasks where the robot must revisit a previously seen object.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">3.</span>
+              <span>
+                <em>Benchmarking spatial capacity.</em> There's no standard benchmark for spatial reasoning in VLA policies. We'd like to develop one that measures: (a) recall—can the model identify where a keyframe was captured, (b) relational reasoning—can it answer questions like "which keyframe is closest to the robot," (c) planning—can it use spatial context to choose efficient paths, and (d) cost—does passing an explicit map consume context window in ways that hurt performance?
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">4.</span>
+              <span>
+                <em>Environment preloading.</em> An exciting direction is loading spatial priors into a policy before deployment. Instead of learning an environment through exploration, you bootstrap with a map—like giving a new employee a tour before their first shift. This could dramatically reduce the data needed for new environments.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">5.</span>
+              <span>
+                <em>Implicit spatial representations.</em> Explicit maps are interpretable and easy to integrate, but they're not necessarily optimal. We're interested in whether spatial context could be encoded directly into visual token embeddings, analogous to how RoPE encodes token position in text. Could we learn spatial encodings over image tokens?
+              </span>
+            </li>
+          </ol>
 
-# Generate map
-map_image, keyframe_colors = ctx.generate_map()
-
-# Show map
-import cv2
-cv2.imshow("Spatial Map", map_image)
-cv2.waitKey(0)`}</CodeBlock>
-        </div>
-
-        <div>
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            Integration with MemER
-          </h3>
-          <CodeBlock>{`# Existing MemER loop (simplified)
-for timestep in episode:
-    observation = env.get_observation()
-    action = policy(observation, memory)
-
-    # === ADD: Spatial-MemER (3 lines) ===
-    frame_id = spatial_ctx.add_frame(robot.joint_angles)
-    map_image, colors = spatial_ctx.generate_map()
-    watermarked_obs = spatial_ctx.watermark_keyframes([observation], colors)
-    # === END ===
-
-    # Policy now receives spatially-enhanced observations
-    action = policy(watermarked_obs, map_image, memory)`}</CodeBlock>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// Use Cases Section
-// ============================================================================
-
-function UseCasesSection() {
-  return (
-    <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <SectionHeading icon={<ClipboardCheckIcon />} title="Use Cases" />
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <UseCaseCard
-            icon={<ClockIcon />}
-            title="Long-horizon manipulation"
-            description="Track object locations across multi-step tasks"
-          />
-          <UseCaseCard
-            icon={<SearchIcon />}
-            title="Spatial search"
-            description={`"Find the blue ball" (avoid re-searching)`}
-          />
-          <UseCaseCard
-            icon={<ArrowCircleRightIcon />}
-            title="Navigation"
-            description={`"Return to the start position"`}
-          />
-          <UseCaseCard
-            icon={<LayoutIcon />}
-            title="Geometric reasoning"
-            description={`"Place object between A and B"`}
-          />
-          <UseCaseCard
-            icon={<ClockIcon />}
-            title="Temporal tracking"
-            description={`"Show me where the cup was 30 seconds ago"`}
-          />
-          <UseCaseCard
-            icon={<EyeIcon />}
-            title="Occluded retrieval"
-            description="Get objects out of current view using spatial memory"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// Testing Section
-// ============================================================================
-
-function TestingSection() {
-  return (
-    <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <SectionHeading
-          icon={<CheckCircleIcon />}
-          title="Testing & Validation"
-        />
-
-        <p className="text-lg text-[#2a2a2a] mb-6 leading-relaxed font-light text-center">
-          We evaluate Spatial-MemER across controlled table-top setups and
-          longer-horizon tasks that stress spatial recall, landmark re-finding,
-          and geometric reasoning. Our goal is to make spatial memory tests as
-          repeatable as classic manipulation benchmarks.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <FeatureCard
-            icon={<></>}
-            title="Spatial Recall"
-            description="Return-to-location tasks and occluded object retrieval to measure memory persistence and drift."
-          />
-          <FeatureCard
-            icon={<></>}
-            title="Map Consistency"
-            description="Keyframe-map alignment checks and inter-keyframe distance stability under repeated viewpoints."
-          />
-          <FeatureCard
-            icon={<></>}
-            title="Policy Impact"
-            description="Task success and sample efficiency comparisons vs. baselines without spatial memory augmentation."
-          />
-        </div>
-
-        <div className="glossy-card p-6 bg-[#FAFAF8] border border-[#e8e7e0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-(family-name:--font-eb-garamond) rounded-lg">
-          <h3 className="text-xl font-medium text-[#1a1a1a] mb-3 text-center">
-            A Call for Benchmarking
-          </h3>
-          <p className="text-base text-[#2a2a2a] font-light leading-relaxed text-center">
-            Spatial memory needs standardized, community-driven benchmarks. We
-            propose suites spanning tabletop manipulation, navigation, and
-            long-horizon rearrangement with shared metrics for localization
-            drift, revisit accuracy, and memory decay. A concerted effort will
-            make results comparable across labs and accelerate reliable embodied
-            AI.
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">Why IRIS.</strong> The MemER codebase isn't publicly available yet, and we don't have access to robot hardware. IRIS would give us both, along with collaborators who have deep experience in this space. We're excited to run the experiments above, but also to work with PhDs, postdocs, and other students on the broader question: <em>what does it take to give robots a sense of space?</em>
           </p>
         </div>
       </div>
@@ -751,40 +655,23 @@ function FooterSection() {
             Contact us.
           </h3>
           <p className="text-base text-[#2a2a2a] mb-4 font-light leading-relaxed">
-            We&apos;re always down for a chat about our ideas, future
+            We&apos;re always happy for a chat about our ideas, future
             iterations, or collaboration.
           </p>
-          <div className="space-y-2 text-base">
-            <div>
-              <a
-                href="mailto:mmusic@stanford.edu"
-                className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
-              >
-                mmusic@stanford.edu
-              </a>{" "}
-              ·{" "}
-              <a
-                href="https://markmusic.io"
-                className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
-              >
-                markmusic.io
-              </a>
-            </div>
-            <div>
-              <a
-                href="mailto:filippo.fonseca@yale.edu"
-                className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
-              >
-                filippo.fonseca@yale.edu
-              </a>{" "}
-              ·{" "}
-              <a
-                href="https://filippofonseca.com"
-                className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
-              >
-                filippofonseca.com
-              </a>
-            </div>
+          <div className="text-base">
+            <a
+              href="mailto:mmusic@stanford.edu"
+              className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
+            >
+              mmusic@stanford.edu
+            </a>
+            {" "}·{" "}
+            <a
+              href="mailto:filippo.fonseca@yale.edu"
+              className="text-[#1a1a1a] hover:text-[#4a4a4a] transition-colors border-b border-[#1a1a1a]"
+            >
+              filippo.fonseca@yale.edu
+            </a>
           </div>
         </div>
 
@@ -794,8 +681,7 @@ function FooterSection() {
             Pan, Satvik Sharma, and Chelsea Finn at Stanford.
           </p>
           <p>
-            Apache 2.0 License · Made with ❤️ in Costa Rica 🇨🇷 for the physical
-            AI research community.
+            Apache 2.0 License · Made with love in Costa Rica for the robot learning research community.
           </p>
         </div>
       </div>
