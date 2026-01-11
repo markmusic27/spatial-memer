@@ -8,3 +8,4 @@ export * from "./ui";
 export { StickyNav, actionLinks, type ActionLink } from "./sticky-nav";
 export { VideoPlayer } from "./video-player";
 export { AuthorCard } from "./author-card";
+export { default as CursorScale } from "./cursor-scale";

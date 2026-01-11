@@ -28,6 +28,7 @@ import {
   EyeIcon,
   CheckCircleIcon,
   ChatIcon,
+  CursorScale,
 } from "./components";
 
 export default function Home() {
@@ -531,16 +532,18 @@ function NextStepsSection() {
 
         {/* Polaroid Image */}
         <div className="flex justify-center mb-8">
-          <div className="bg-[#FAFAF8] p-2 pb-8 shadow-[0_2px_8px_rgba(0,0,0,0.08)] rotate-2 hover:rotate-1 transition-transform duration-300 border border-[#E3E1D5]">
-            <img
-              src="/data_collection.png"
-              alt="Data collection setup"
-              className="w-full max-w-[220px]"
-            />
-            <p className="text-center text-[#4a4a4a] text-sm font-light mt-2 italic">
-              Our robot. Some assembly required.
-            </p>
-          </div>
+          <CursorScale hoverScale={1.05} maxTranslate={6} lerp={0.1} baseRotation={2.5} hoverRotation={1}>
+            <div className="bg-[#FAFAF8] p-2 pb-8 shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#E3E1D5]">
+              <img
+                src="/data_collection.png"
+                alt="Data collection setup"
+                className="w-full max-w-[220px]"
+              />
+              <p className="text-center text-[#4a4a4a] text-sm font-light mt-2 italic">
+                Our robot. Some assembly required.
+              </p>
+            </div>
+          </CursorScale>
         </div>
 
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
