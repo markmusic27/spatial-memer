@@ -26,14 +26,14 @@ export const actionLinks: ActionLink[] = [
     icon: <PlayCircleIcon />,
   },
   {
-    href: "#data-collection",
+    href: "#next-steps",
     label: "How We Collected Data (No Robot)",
     mobileLabel: "Data Collection (No Robot)",
     icon: <DocsIcon />,
     hideOnMobile: true,
   },
   {
-    href: "#implementation",
+    href: "#architecture",
     label: "Integration with MemER",
     icon: <PaperIcon />,
     hideOnMobile: true,

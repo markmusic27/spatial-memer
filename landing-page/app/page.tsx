@@ -126,7 +126,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
         <p className="text-base text-[#6a6a6a] mb-8 italic">
           Extending{" "}
           <a
-            href="https://jen-pan.github.io/memer/"
+            href="https://arxiv.org/abs/2510.20328"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#1a1a1a] underline hover:text-[#4a4a4a] transition-colors"
@@ -524,7 +524,7 @@ ctx.promote_to_keyframe(frame_id)
 
 function NextStepsSection() {
   return (
-    <section className="py-8 px-6">
+    <section id="next-steps" className="py-8 px-6">
       <div className="max-w-[810px] mx-auto px-1 md:px-6">
         <h2 className="text-3xl font-medium mb-6 text-[#1a1a1a] text-center">
           Next Steps
@@ -629,7 +629,7 @@ function CitationSection() {
           <p className="text-base text-[#2a2a2a] mb-4 font-light leading-relaxed">
             This work extends{" "}
             <a
-              href="https://jen-pan.github.io/memer/"
+              href="https://arxiv.org/abs/2510.20328"
               className="text-[#1a1a1a] underline hover:text-[#4a4a4a] transition-colors"
             >
               MemER: Memory-Enhanced Robot Policies
@@ -682,7 +682,16 @@ function FooterSection() {
 
         <div className="text-sm text-[#6a6a6a] space-y-2 font-light leading-relaxed">
           <p>
-            This project builds on the MemER framework by Ajay Sridhar, Jennifer
+            This project builds on the{" "}
+            <a
+              href="https://arxiv.org/abs/2510.20328"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#6a6a6a] hover:text-[#4a4a4a] transition-colors underline"
+            >
+              MemER
+            </a>{" "}
+            framework by Ajay Sridhar, Jennifer
             Pan, Satvik Sharma, and Chelsea Finn at Stanford.
           </p>
           <p>
