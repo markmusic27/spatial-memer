@@ -413,12 +413,15 @@ function ArchitectureSection() {
               The egocentric map displays keyframes at their position relative to the robot, with arrows indicating orientation. Map scale is computed relative to the farthest keyframe from the robot, normalizing positions so the map uses its full extent regardless of how spread out keyframes are. To prevent nearby keyframes from clustering, we run outlier detection on keyframe distances: anything beyond 2σ is clamped to the edge of the map rather than distorting the scale. Each keyframe image is watermarked with a colored and numbered square that matches its marker on the map, using colors opposite on the color wheel to help the VLM distinguish between them. We also developed overlap prevention for map markers, though this is not shown in the demo.
             </p>
           </div>
-          <div className="flex items-start justify-center">
+          <div className="flex flex-col items-center justify-start">
             <img
               src="/map_example_anim.webp"
               alt="Egocentric Map Example"
               className="w-full max-w-[360px] aspect-square object-cover border-4 border-[#e8e7e0] pointer-events-none"
             />
+            <p className="text-center text-[#4a4a4a] text-base font-light leading-relaxed mt-4">
+              Spatial map from kitchen demo. The robot is always centered, facing up. Numbered markers show where keyframes were captured relative to the robot's current position.
+            </p>
           </div>
         </div>
 
