@@ -305,7 +305,7 @@ function WhySection() {
             We wanted to give the policy explicit spatial context through an egocentric map — a direct 
             visual representation of where keyframes were captured relative to the robot's current pose.{" "}
             <a
-              href="#overview"
+              href="#architecture"
               className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
             >More on the mechanism below.</a>
           </p>
@@ -329,47 +329,113 @@ function WhySection() {
 function LocalizationSection() {
   return (
     <section id="localization" className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <SectionHeading icon={<BoltIcon className="w-7 h-7" />} title="Localization" />
+      <div className="max-w-[810px] mx-auto px-1 md:px-6">
+        <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
+          Localization
+        </h2>
 
-        <div className="mb-8">
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            Installation
-          </h3>
-          <CodeBlock>{`# Install dependencies
-uv sync
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            To obtain the camera pose, Spatial-MemER can run in two modes: stationary, where the robot base is fixed and the end-effector pose can be computed through forward kinematics, and mobile, where the robot moves through an environment and we need visual odometry to track its position. In both cases, the map is always represented in end-effector coordinates in the world frame.
+          </p>
 
-# For mobile robots - install DPVO for visual odometry
-./scripts/setup_dpvo.sh`}</CodeBlock>
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">For Stationary Robots</strong>
+          </p>
+
+          <p>
+            Robots clamped to a table with precise actuators:
+          </p>
         </div>
 
-        <div className="mb-8">
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            Basic Usage
-          </h3>
-          <CodeBlock>{`from spatial_context import SpatialContext
-
-# Initialize
-ctx = SpatialContext()
-
-# In your robot policy loop (1 Hz)
-robot_joint_angles = robot.get_joint_angles()  # 7-DOF
-
-# 1. Add current frame
-frame_id = ctx.add_frame(robot_joint_angles)
-
-# 2. Generate spatial map
-map_image, colors = ctx.generate_map()
-
-# 3. Promote important frames to keyframes
-ctx.promote_to_keyframe(frame_id)
-
-# Feed map_image + keyframes to your VLM!`}</CodeBlock>
+        <div className="mt-6 mb-6">
+          <CodeBlock centered>{`Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
+  (7-DOF)         (SE(3) 4×4)         (World)      (Egocentric BEV)`}</CodeBlock>
         </div>
 
-        <p className="text-center text-lg font-light text-[#2a2a2a] italic">
-          That&apos;s it! Your policy now has spatial awareness.
-        </p>
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            We use the Franka Emika Panda (FR3) arm described in the MemER paper and compute the end-effector pose through the MuJoCo physics library given the robot's joint state. With a stationary base and precise actuators, forward kinematics provides exact pose: no SLAM needed.
+          </p>
+        </div>
+
+        <div className="mt-6 mb-6">
+          <CodeBlock>{`# Stationary robot localization
+robot_state = robot.get_state()  # 7-DOF joint angles
+camera_pose = forward_kinematics(robot_state)  # SE(3) via MuJoCo
+ctx.add_frame(camera_pose)`}</CodeBlock>
+        </div>
+
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">For Mobile Robots</strong>
+          </p>
+
+          <p>
+            Robots with moving bases:
+          </p>
+        </div>
+
+        <div className="mt-6 mb-6">
+          <CodeBlock centered>{`RGB Frames → DPVO (Deep Patch Visual Odometry) → Robot Pose (World) + FK → Spatial Map`}</CodeBlock>
+        </div>
+
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            We use{" "}
+            <a
+              href="https://github.com/princeton-vl/DPVO"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
+            >Deep Patch Visual Odometry (DPVO)</a>{" "}
+            to track the robot's base pose. Our approach runs DPVO in parallel at 15Hz on the exocentric camera, which has a better view of the environment. Running at higher frequency means more images and more stable pose estimates. Whenever we need a pose, it's already available from the parallel thread.
+          </p>
+
+          <p>
+            DPVO eliminates the overhead of approaches that also predict a point cloud of the environment, focusing purely on visual odometry. The result is an algorithm that runs 1.5-8.9x faster than DROID-SLAM and comfortably hits 15Hz{" "}
+            <a
+              href="https://arxiv.org/abs/2208.04726"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
+            >(Teed et al., 2023)</a>.
+          </p>
+        </div>
+
+        <div className="mt-6 mb-6">
+          <CodeBlock>{`# Mobile robot localization
+dpvo_pose = dpvo.get_latest_pose()  # Exocentric camera pose from visual odometry
+robot_state = robot.get_state()      # Joint angles
+base_pose = dpvo_pose @ T_exo_to_base  # Transform from exocentric camera to arm base
+camera_pose = base_pose @ forward_kinematics(robot_state)  # Compose base + arm
+ctx.add_frame(camera_pose)`}</CodeBlock>
+        </div>
+
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
+          <p>
+            <strong className="font-semibold text-[#1a1a1a]">Improvements to DPVO</strong>
+          </p>
+
+          <p>
+            For our demo, we used DPVO out of the box with iPhone camera intrinsics we tuned for the 0.5x lens we recorded with. It worked well, but we see two improvements for tighter integration:
+          </p>
+
+          <ol className="list-none space-y-3 pl-1">
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">1.</span>
+              <span>
+                DPVO randomly samples image patches and tracks them across frames using learned correlation features. We found it struggled with the robot arm (or in our demo, Mark's arm) always in view, as patches sampled from the arm produce inconsistent motion estimates. Given the robot state, you could generate a projected mask of the arm onto the exocentric camera and prevent DPVO from sampling patches in that region.
+              </span>
+            </li>
+            <li className="flex gap-3">
+              <span className="text-[#9A9A9A] font-medium shrink-0">2.</span>
+              <span>
+                DPVO initializes patch depth as the median depth of patches from the previous three frames, then refines it through differentiable bundle adjustment. But MemER uses RGB-D cameras, and our iPhone 16 Pro has depth from its LiDAR sensor. Replacing the initialized depth values with ground truth from the RGB-D feed should improve convergence and accuracy.
+              </span>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
   );
@@ -381,7 +447,7 @@ ctx.promote_to_keyframe(frame_id)
 
 function ArchitectureSection() {
   return (
-    <section className="py-8 px-6">
+    <section id="architecture" className="py-8 px-6">
       <div className="max-w-[810px] mx-auto px-1 md:px-6">
         <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
           Architecture
