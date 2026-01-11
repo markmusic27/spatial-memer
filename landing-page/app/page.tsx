@@ -20,7 +20,6 @@ import {
   WarningIcon,
   LightbulbIcon,
   BoltIcon,
-  ArchiveIcon,
   ClipboardCheckIcon,
   ClockIcon,
   SearchIcon,
@@ -76,8 +75,8 @@ export default function Home() {
 
       <SectionDivider />
 
-      {/* Quick Start Code */}
-      <QuickStartSection />
+      {/* Localization */}
+      <LocalizationSection />
 
       <SectionDivider />
 
@@ -324,14 +323,14 @@ function WhySection() {
 }
 
 // ============================================================================
-// Quick Start Section
+// Localization Section
 // ============================================================================
 
-function QuickStartSection() {
+function LocalizationSection() {
   return (
-    <section className="py-8 px-6">
+    <section id="localization" className="py-8 px-6">
       <div className="max-w-3xl mx-auto">
-        <SectionHeading icon={<BoltIcon className="w-7 h-7" />} title="Quick Start" />
+        <SectionHeading icon={<BoltIcon className="w-7 h-7" />} title="Localization" />
 
         <div className="mb-8">
           <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
@@ -383,32 +382,76 @@ ctx.promote_to_keyframe(frame_id)
 function ArchitectureSection() {
   return (
     <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <SectionHeading icon={<ArchiveIcon />} title="Architecture" />
+      <div className="max-w-[810px] mx-auto px-1 md:px-6">
+        <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
+          Architecture
+        </h2>
 
-        <div className="mb-8">
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            For Stationary Robots
-          </h3>
-          <p className="text-base text-[#4a4a4a] mb-4 font-light leading-relaxed">
-            Robots clamped to a table with precise actuators:
+        {/* Diagram */}
+        <div className="mt-12">
+          <img
+            src="/architecture.svg"
+            alt="Spatial-MemER Architecture Diagram"
+            className="w-full"
+          />
+        </div>
+
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-2">
+          <p>
+            Spatial-MemER is built to sit on top of the existing MemER architecture. In fact, you can integrate our approach with just a few lines of code, which runs at 1Hz within the high-level policy. We designed the map module to be customizable through a <code className="bg-[#F5F0E8] px-1.5 py-0.5 rounded border border-[#EAE0DA]">MapConfig</code> dataclass, making it easy to experiment with different map layouts to see what the VLM responds to best.
           </p>
-          <CodeBlock centered>{`Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
-    (7-DOF)         (SE(3) 4×4)        (World)      (Egocentric BEV)`}</CodeBlock>
-          <p className="text-sm text-[#6a6a6a] italic font-light leading-relaxed mt-3">
-            Why no SLAM? Precise actuators + stationary base = forward
-            kinematics provides exact pose.
+
+          <p>
+            At a high level, Spatial-MemER does two things: (1) store the end-effector pose at each frame, and (2) generate an egocentric BEV map which is passed as an additional image to the high-level policy. <a href="#localization" className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors">More on our localization approach below.</a>
           </p>
         </div>
 
-        <div>
-          <h3 className="text-xl font-medium mb-4 text-[#1a1a1a]">
-            For Mobile Robots
-          </h3>
-          <p className="text-base text-[#4a4a4a] mb-4 font-light leading-relaxed">
-            Robots with moving bases:
+        {/* Two-column layout: Text left, Image right */}
+        <div className="grid md:grid-cols-[1fr_1fr] gap-6 mt-8 items-start">
+          <div className="text-[#2a2a2a] text-lg leading-[1.85]">
+            <p>
+              The egocentric map displays keyframes at their position relative to the robot, with arrows indicating orientation. Map scale is computed relative to the farthest keyframe from the robot, normalizing positions so the map uses its full extent regardless of how spread out keyframes are. To prevent nearby keyframes from clustering, we run outlier detection on keyframe distances: anything beyond 2σ is clamped to the edge of the map rather than distorting the scale. Each keyframe image is watermarked with a colored and numbered square that matches its marker on the map, using colors opposite on the color wheel to help the VLM distinguish between them. We also developed overlap prevention for map markers, though this is not shown in the demo.
+            </p>
+          </div>
+          <div className="flex items-start justify-center">
+            <img
+              src="/map_example_anim.webp"
+              alt="Egocentric Map Example"
+              className="w-full max-w-[360px] aspect-square object-cover border-4 border-[#e8e7e0] pointer-events-none"
+            />
+          </div>
+        </div>
+
+        <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4 mt-8">
+          <p>
+            MemER's clustering algorithm can promote non-current frames to keyframe status, but we only have access to the current robot state, which we need to compute the camera pose at that frame. To handle this, we maintain a two-part system: all frames are added to a pose history as they arrive, and frames can later be promoted to keyframes when the clustering algorithm selects them.
           </p>
-          <CodeBlock centered>{`RGB Frames → DPVO (Deep Patch Visual Odometry) → Robot Pose (World) + FK → Spatial Map`}</CodeBlock>
+
+          <p>
+            The entire interface is accessible through the <code className="bg-[#F5F0E8] px-1.5 py-0.5 rounded border border-[#EAE0DA]">SpatialContext</code> class. Here's an example for a stationary robot setup:
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <CodeBlock>{`# Initialize
+ctx = SpatialContext()
+
+# In the high-level policy loop (1 Hz)
+robot_state = robot.get_state()  # 7-DOF joint angles
+
+# 1. Add current frame to pose history
+frame_id = ctx.add_frame(robot_state)
+
+# 2. Generate the egocentric spatial map
+map_image, colors = ctx.generate_map()
+
+# 3. Watermark keyframe images with map markers
+watermarked_keyframes = ctx.watermark_keyframes(keyframe_images, colors)
+
+# 4. Promote important frames to keyframes (when selected by MemER)
+ctx.promote_to_keyframe(frame_id)
+
+# Feed map_image + watermarked_keyframes to the VLM and repeat!`}</CodeBlock>
         </div>
       </div>
     </section>
