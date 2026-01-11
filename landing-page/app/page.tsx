@@ -258,7 +258,7 @@ function WhySection() {
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
           <p>
             Humans don't just remember <em>what</em> they saw — they remember <em>where</em> they saw it. 
-            Think about making a sandwich: you recall the pan, but also that it's in the cabinet left 
+            Think about making an omelette: you recall the pan, but also that it's in the cabinet left 
             of the stove. Spatial context is inseparable from visual memory.
           </p>
 
@@ -525,28 +525,28 @@ function NextStepsSection() {
   return (
     <section className="py-8 px-6">
       <div className="max-w-[810px] mx-auto px-1 md:px-6">
-        <h2 className="text-3xl font-medium mb-8 text-[#1a1a1a] text-center">
+        <h2 className="text-3xl font-medium mb-6 text-[#1a1a1a] text-center">
           Next Steps
         </h2>
+
+        {/* Polaroid Image */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-[#FAFAF8] p-2 pb-8 shadow-[0_2px_8px_rgba(0,0,0,0.08)] rotate-2 hover:rotate-1 transition-transform duration-300 border border-[#E3E1D5]">
+            <img
+              src="/data_collection.png"
+              alt="Data collection setup"
+              className="w-full max-w-[220px]"
+            />
+            <p className="text-center text-[#4a4a4a] text-sm font-light mt-2 italic">
+              Our robot. Some assembly required.
+            </p>
+          </div>
+        </div>
 
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
           <p>
             <strong className="font-semibold text-[#1a1a1a]">Data collection without a robot.</strong> We didn't have access to a robot arm, so we improvised. Mark wore a chest-mounted iPhone 16 Pro and a wrist-mounted GoPro, constrained his arm to a single degree of freedom with 45° discretized joint angles, and performed kitchen tasks while we recorded. DPVO ran on the chest camera for localization; we computed FK manually from video. It's scrappy, but it validated the full pipeline: localization, pose storage, map generation, and keyframe correspondence all work end-to-end.
           </p>
-
-          {/* Polaroid Image */}
-          <div className="flex justify-center my-8">
-            <div className="bg-white p-3 pb-12 shadow-[0_4px_20px_rgba(0,0,0,0.12)] rotate-1 hover:rotate-0 transition-transform duration-300">
-              <img
-                src="/data_collection.png"
-                alt="Data collection setup"
-                className="w-full max-w-[400px]"
-              />
-              <p className="text-center text-[#4a4a4a] text-sm font-light mt-3 italic px-2">
-                Data collection rig: iPhone 16 Pro (chest) for DPVO localization, GoPro (wrist) as egocentric camera, and one very patient arm.
-              </p>
-            </div>
-          </div>
 
           <p>
             <strong className="font-semibold text-[#1a1a1a]">Finetuning for spatial dependence.</strong> The risk with adding spatial context is that the VLM ignores it. If the exocentric camera already provides enough information to complete the task, the model has no incentive to attend to the map. To force spatial dependence, we plan to finetune Qwen on tasks where the map is necessary: objects that aren't visible in any current frame, disambiguation between identical objects in different locations, and navigation-first tasks where the robot must move before it can see what it needs. The training signal should make it impossible to succeed without using spatial context.
