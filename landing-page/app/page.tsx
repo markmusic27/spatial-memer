@@ -550,11 +550,12 @@ function NextStepsSection() {
 
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
           <p>
-            <strong className="font-semibold text-[#1a1a1a]">Data collection without a robot.</strong> We didn't have access to a robot arm, so we improvised. Mark wore a chest-mounted iPhone 16 Pro and a wrist-mounted GoPro, constrained his arm to a single degree of freedom with 45° discretized joint angles, and performed kitchen tasks while we recorded. DPVO ran on the chest camera for localization; we computed FK manually from video. It's scrappy, but it validated the full pipeline: localization, pose storage, map generation, and keyframe correspondence all work end-to-end.
+            <strong className="font-semibold text-[#1a1a1a]">Data collection without a robot.</strong> We didn't have access to a robot arm, so we improvised. Mark wore a chest-mounted iPhone 16 Pro and a wrist-mounted GoPro, constrained his arm to a single degree of freedom, and performed kitchen tasks while we recorded. To compute FK, we reviewed the footage and manually logged the shoulder angle at each frame—discretizing to 45° increments made this easy to eyeball. DPVO ran on the chest camera for localization. It's scrappy, but it validated the full pipeline: localization, pose storage, map generation, and keyframe correspondence all work end-to-end.
+
           </p>
 
           <p>
-            <strong className="font-semibold text-[#1a1a1a]">Finetuning for spatial dependence.</strong> The risk with adding spatial context is that the VLM ignores it. If the exocentric camera already provides enough information to complete the task, the model has no incentive to attend to the map. To force spatial dependence, we plan to finetune Qwen on tasks where the map is necessary: objects that aren't visible in any current frame, disambiguation between identical objects in different locations, and navigation-first tasks where the robot must move before it can see what it needs. The training signal should make it impossible to succeed without using spatial context.
+            <strong className="font-semibold text-[#1a1a1a]">Finetuning for spatial dependence.</strong> The risk with adding spatial context is that the VLM ignores it. If the exocentric camera in MemER already provides enough information to complete the task, the high-level policy has no incentive to attend to the map. To force spatial dependence, we plan to finetune the high-level policy (Qwen2.5-VL-7B-Instruct) on a mix of tasks: some where the map is necessary, some where it isn't. This prevents the model from losing its ability to reason from frames alone. Tasks requiring the map include objects not visible in any current frame, disambiguation between identical objects, and navigation-first scenarios. The training signal should teach the model <em>when</em> to use spatial context, not just that it exists.
           </p>
 
           <p>
@@ -577,19 +578,26 @@ function NextStepsSection() {
             <li className="flex gap-3">
               <span className="text-[#9A9A9A] font-medium shrink-0">3.</span>
               <span>
-                <em>Benchmarking spatial capacity.</em> There's no standard benchmark for spatial reasoning in VLA policies. We'd like to develop one that measures: (a) recall—can the model identify where a keyframe was captured, (b) relational reasoning—can it answer questions like "which keyframe is closest to the robot," (c) planning—can it use spatial context to choose efficient paths, and (d) cost—does passing an explicit map consume context window in ways that hurt performance?
+                <em>Benchmarking spatial capacity.</em> There's no standard benchmark for spatial reasoning in VLA/hierarchical policies. The closest work is{" "}
+                <a
+                  href="https://arxiv.org/abs/2509.18905"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
+                >SIBench (Yu et al., 2025)</a>, which evaluates spatial reasoning in VLMs across tasks like distance estimation, spatial relations, and multi-view reasoning. But robotics introduces new challenges: the agent is embodied, the spatial context evolves over time, and reasoning must translate into action. We'd like to develop a benchmark tailored to VLAs that measures: (a) recall, can the model identify where a keyframe was captured, (b) relational reasoning, can it answer questions like "which keyframe is closest to the robot," (c) planning, can it use spatial context to choose efficient action sequences, and (d) cost, does passing an explicit map consume the VLM's context window in ways that hurt downstream task performance?
               </span>
             </li>
             <li className="flex gap-3">
               <span className="text-[#9A9A9A] font-medium shrink-0">4.</span>
               <span>
-                <em>Environment preloading.</em> An exciting direction is loading spatial priors into a policy before deployment. Instead of learning an environment through exploration, you bootstrap with a map—like giving a new employee a tour before their first shift. This could dramatically reduce the data needed for new environments.
+                <em>Environment preloading.</em> An exciting direction is loading spatial priors into a policy before deployment. Instead of learning an environment through exploration, you bootstrap with a map, like giving a new employee a tour before their first shift. This could dramatically reduce the data needed for new environments.
               </span>
             </li>
             <li className="flex gap-3">
               <span className="text-[#9A9A9A] font-medium shrink-0">5.</span>
               <span>
-                <em>Implicit spatial representations.</em> Explicit maps are interpretable and easy to integrate, but they're not necessarily optimal. We're interested in whether spatial context could be encoded directly into visual token embeddings, analogous to how RoPE encodes token position in text. Could we learn spatial encodings over image tokens?
+                <em>Implicit spatial representations.</em> We know explicit maps aren't the most elegant way to represent space, but they prove the concept. Ultimately, we want to explore different ways to imbue policies with spatial awareness. Could spatial context be encoded directly into visual token embeddings, analogous to how RoPE encodes token position in text? Could we add a learned spatial embedding to keyframe tokens based on their capture pose? Could a lightweight spatial encoder compress pose history into a fixed-size representation the VLM attends to? The map is a starting point; implicit representations are where this research goes next.
+
               </span>
             </li>
           </ol>
