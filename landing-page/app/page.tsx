@@ -346,7 +346,7 @@ function LocalizationSection() {
 
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-4">
           <p>
-            We use the Franka Emika Panda (FR3) arm described in the MemER paper and compute the end-effector pose through the MuJoCo physics library given the robot's joint state. With a stationary base and precise actuators, forward kinematics provides exact pose: no SLAM needed.
+            We use the Franka Emika Panda (FR3) arm described in the MemER paper and compute the end-effector pose through the MuJoCo physics library given the robot's joint state. With a stationary base and precise actuators, forward kinematics provides exact pose: no SLAM needed. <span className="font-medium">The robot state is already available in MemER's observation loop, making integration truly plug and play</span>.
           </p>
         </div>
 
@@ -409,7 +409,7 @@ ctx.add_frame(camera_pose)`}</CodeBlock>
           </p>
 
           <p>
-            For our demo, we used DPVO out of the box with iPhone camera intrinsics we tuned for the 0.5x lens we recorded with. It worked well, but we see two improvements for tighter integration:
+            For our demo, we used DPVO out of the box with iPhone 16 Pro camera intrinsics we tuned for the 0.5x lens we recorded with. It worked well, but we see two improvements for tighter integration:
           </p>
 
           <ol className="list-none space-y-3 pl-1">
@@ -455,7 +455,7 @@ function ArchitectureSection() {
 
         <div className="text-[#2a2a2a] text-lg leading-[1.85] space-y-2">
           <p>
-            Spatial-MemER is built to sit on top of the existing MemER architecture. In fact, you can integrate our approach with just a few lines of code, which runs at 1Hz within the high-level policy. We designed the map module to be customizable through a <code className="bg-[#F5F0E8] px-1.5 py-0.5 rounded border border-[#EAE0DA]">MapConfig</code> dataclass, making it easy to experiment with different map layouts to see what the VLM responds to best.
+            Spatial-MemER is built to sit on top of the existing MemER architecture. In fact, you can integrate our approach into MemER with just a few lines of code, which runs at 1Hz within the high-level policy. We designed the map module to be customizable through a <code className="bg-[#F5F0E8] px-1.5 py-0.5 rounded border border-[#EAE0DA]">MapConfig</code> dataclass, making it easy to experiment with different map layouts to see what the VLM responds to best.
           </p>
 
           <p>
