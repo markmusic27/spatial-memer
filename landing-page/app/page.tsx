@@ -375,7 +375,7 @@ ctx.add_frame(camera_pose)`}</CodeBlock>
           <p>
             We use{" "}
             <a
-              href="https://github.com/princeton-vl/DPVO"
+              href="https://arxiv.org/abs/2208.04726"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[#1a1a1a] underline decoration-1 underline-offset-2 hover:text-[#4a4a4a] transition-colors"
