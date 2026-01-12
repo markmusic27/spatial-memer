@@ -596,7 +596,7 @@ function NextStepsSection() {
             <li className="flex gap-3">
               <span className="text-[#9A9A9A] font-medium shrink-0">5.</span>
               <span>
-                <em>Implicit spatial representations.</em> We know explicit maps aren't the most elegant way to represent space, but they prove the concept. Ultimately, we want to explore different ways to imbue policies with spatial awareness. Could spatial context be encoded directly into visual token embeddings, analogous to how RoPE encodes token position in text? Could we add a learned spatial embedding to keyframe tokens based on their capture pose? Could a lightweight spatial encoder compress pose history into a fixed-size representation the VLM attends to? The map is a starting point; implicit representations are where this research goes next.
+                <em>Implicit spatial representations.</em> We know explicit maps aren't the most elegant way to represent space, but they prove the concept. Ultimately, we want to explore different ways to imbue policies with spatial awareness. Could spatial context be encoded directly into visual token embeddings, analogous to how RoPE encodes token position in text? The map is a starting point; implicit representations are where this research goes next.
 
               </span>
             </li>
