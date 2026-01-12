@@ -1,259 +1,205 @@
 <div align="center">
-  <img src="spatial-memer-landing/public/cover.png" alt="Spatial-MemER cover" width="860" style="border-radius: 16px;" />
+  <img src="landing-page/public/map_example_anim.webp" alt="Egocentric map example" width="200" />
+  <br />
+  <br />
+  <br />
+</div>
+
+<div align="center">
   <h1><code>Spatial-MemER</code></h1>
-  <p><strong>Spatial Memory for Embodied Robots</strong></p>
-  <p>Adding spatial awareness to vision-language robot policies through egocentric mapping and forward kinematics.</p>
+  <p>Spatial Memory for Hierarchical VLA Policies</p>
+    <a href="https://spatial-memer.vercel.app/"><b>Learn more & see demos »</b></a>
+    <br />
+    <br />
   <p>
     <img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache--2.0-0B5FFF" />
-    <img alt="Python 3.1+" src="https://img.shields.io/badge/python-3.8%2B-1F6FEB" />
     <img alt="Status: Research" src="https://img.shields.io/badge/status-research-0E9F6E" />
     <img alt="Domain: Robotics" src="https://img.shields.io/badge/domain-robotics-111827" />
   </p>
-  <p>
-    <a href="docs/PROJECT_OVERVIEW.md">Project Overview</a> ·
-    <a href="docs/ARCHITECTURE.md">Architecture</a> ·
-    <a href="docs/INTEGRATION_GUIDE.md">Integration Guide</a> ·
-    <a href="docs/EVALUATION.md">Evaluation</a>
-  </p>
-  <p><em>A project we built in a few weeks extending <a href="https://jen-pan.github.io/memer/">MemER: Memory-Enhanced Robot Policies</a>.</em></p>
+  <p><em>Extending <a href="https://jen-pan.github.io/memer/">MemER: Scaling Up Memory for Robot Control via Experience Retrieval</a>.</em></p>
 </div>
 
 ---
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="https://media.licdn.com/dms/image/v2/C4E03AQELZicH6wruqg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1619128430542?e=1769040000&v=beta&t=Ltzq0u9h8OQe15JewO_l1-t1AakWjrOjZrN8Fxj2hAg" width="120" style="border-radius: 50%;" /><br />
-        <b>Mark Music</b><br />
-        <a href="https://markmusic.io">markmusic.io</a><br />
-        Stanford '28<br />
-        CS & Math<br />
-        <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
-      </td>
-      <td align="center">
-        <img src="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90" width="120" style="border-radius: 50%;" /><br />
-        <b>Filippo Fonseca</b><br />
-        <a href="https://filippofonseca.com">filippofonseca.com</a><br />
-        Yale<br />
-        Mech. Eng. (ABET) & EECS<br />
-        <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
-      </td>
-    </tr>
-  </table>
-  <p>We're passionate about the intersection of AI and hardware through robotics. We seek to optimize policies and models - Spatial-MemER is a preview of what we know we can do.</p>
-  <p>We strive to enable the future of embodied intelligence.</p>
-</div>
+MemER's keyframes capture *what* the robot saw — but not *where*. Spatial-MemER adds egocentric spatial context by computing camera poses via forward kinematics (stationary robots) or [DPVO](https://arxiv.org/abs/2208.04726) (mobile robots), rendered as a bird's-eye map that the high-level VLM policy can directly perceive.
 
-## Overview
 
-Spatial-MemER extends vision-language robot policies (like MemER, RT-2) with explicit spatial reasoning. By maintaining an egocentric bird's-eye view map of keyframe observations, robots can understand WHERE they observed objects in 3D space, not just WHAT they saw.
 
-**Key Features**:
+## Installation
 
-- **Three-line integration**: Add spatial awareness to any robot policy
-- **Precise localization**: Forward kinematics-based pose estimation (no SLAM needed for stationary robots)
-- **Egocentric maps**: Auto-generated BEV visualizations showing robot + keyframe locations
-- **Visual correspondence**: Color-coded watermarks link keyframe images to map positions
-- **Modular design**: Independent, testable components
+```bash
+# Clone the repository
+git clone https://github.com/markmusic27/spatial-memer.git
+cd spatial-memer
 
-## Why Spatial-MemER?
+# Install with uv (recommended)
+uv sync
 
-**Problem**: Existing vision-language policies like [MemER](https://jen-pan.github.io/memer/) (Sridhar et al., 2024) lack spatial understanding. They see sequential images but don't know WHERE observations occurred in space.
+# Or with pip
+pip install -e .
+```
 
-**Solution**: Spatial-MemER extends MemER's memory framework with:
+### For Mobile Robots (DPVO)
 
-1. **Spatial map** showing robot position and keyframe locations
-2. **Watermarked keyframes** color-coded to match map markers
-3. **Pose tracking** using precise forward kinematics
+DPVO requires CUDA. Skip this if you only need stationary robot support.
 
-**Impact**: Enables spatial reasoning tasks like:
+```bash
+./scripts/setup_dpvo.sh
 
-- "Go back to where you saw the cup"
-- "Move to the left of the red block"
-- "The target is between the two markers"
+# Or download-only (no CUDA required)
+./scripts/setup_dpvo.sh --download-only
+```
 
 ## Quick Start
 
-### Installation
-
-```bash
-# Install dependencies
-uv sync
-
-# For mobile robots - install DPVO for visual odometry
-./scripts/setup_dpvo.sh
-```
-
-### Basic Usage
+### Stationary Robot (Forward Kinematics)
 
 ```python
+import numpy as np
+import sys
+sys.path.insert(0, "src")
+
 from spatial_context import SpatialContext
 
 # Initialize
 ctx = SpatialContext()
 
-# In your robot policy loop (1 Hz)
-robot_joint_angles = robot.get_joint_angles()  # 7-DOF
+# In your policy loop (1 Hz)
+joint_angles = np.array([0.0, -0.5, 0.0, -2.0, 0.0, 1.5, 0.8])  # 7-DOF
 
-# 1. Add current frame
-frame_id = ctx.add_frame(robot_joint_angles)
+# 1. Add frame (computes pose via forward kinematics)
+frame_id = ctx.add_frame(joint_angles)
 
-# 2. Generate spatial map
-map_image, colors = ctx.generate_map()
-
-# 3. Promote important frames to keyframes
+# 2. Promote to keyframe when selected by MemER
 ctx.promote_to_keyframe(frame_id)
 
-# Feed map_image + keyframes to your VLM!
+# 3. Generate spatial map
+map_image, colors = ctx.generate_map()
+
+# 4. Watermark keyframes to match map markers
+keyframe_images = [(frame_id, your_keyframe_image)]
+watermarked = ctx.watermark_keyframes(keyframe_images, colors)
+
+# Feed map_image + watermarked keyframes to your VLM!
 ```
 
-**That's it!** Your policy now has spatial awareness.
-
-## Architecture
-
-### For Stationary Robots (Current Setup)
-
-Robots clamped to a table with precise actuators:
-
-```
-Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
-    (7-DOF)         (SE(3) 4×4)        (World)      (Egocentric BEV)
-```
-
-**Why no SLAM?** Precise actuators + stationary base = forward kinematics provides exact pose.
-
-### For Mobile Robots
-
-Robots with moving bases:
-
-```
-RGB Frames → DPVO → Robot Pose (World) → Combined with FK → Spatial Map
-```
-
-Both architectures use the same `SpatialContext` API.
-
-## Repository Structure
-
-```
-spatial-memer/
-├── src/
-│   ├── robot_arm.py          # Forward kinematics (7-DOF robot arm)
-│   ├── spatial_context.py    # Spatial memory + map generation
-│   ├── localization.py       # DPVO wrapper for mobile robots
-│   └── transforms.py         # SE(3) transformation utilities
-├── scripts/
-│   ├── test_pose.py          # Test forward kinematics
-│   ├── test_spatial_context.py  # Test map generation
-│   └── test_localization.py  # Test DPVO integration
-├── docs/
-│   ├── PROJECT_OVERVIEW.md   # High-level motivation + design
-│   ├── ARCHITECTURE.md       # Technical deep-dive
-│   ├── INTEGRATION_GUIDE.md  # API reference + examples
-│   ├── EVALUATION.md         # Testing strategy (10 task types)
-│   └── LOCALIZATION.md       # DPVO usage (mobile robots)
-├── examples/
-│   └── localization_example.py  # Full integration example
-└── assets/
-    └── home_example.mp4      # Test video for DPVO
-```
-
-## Documentation
-
-- **[PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)**: Motivation, use cases, evaluation strategy
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Technical design, algorithms, coordinate frames
-- **[INTEGRATION_GUIDE.md](docs/INTEGRATION_GUIDE.md)**: Complete API reference with examples
-- **[EVALUATION.md](docs/EVALUATION.md)**: 100-test evaluation suite design
-- **[LOCALIZATION.md](docs/LOCALIZATION.md)**: DPVO integration for mobile robots
-
-## Example: Stationary Robot
-
-```python
-from spatial_context import SpatialContext
-import numpy as np
-
-# Initialize spatial memory
-ctx = SpatialContext()
-
-# Simulate robot motion
-for timestep in range(50):
-    # Get robot state (joint angles in radians)
-    joint_angles = robot.get_joint_angles()  # 7-element array
-
-    # Add frame (computes pose via forward kinematics)
-    frame_id = ctx.add_frame(joint_angles)
-
-    # Promote every 10th frame to keyframe
-    if timestep % 10 == 0:
-        ctx.promote_to_keyframe(frame_id)
-
-# Generate map
-map_image, keyframe_colors = ctx.generate_map()
-
-# Show map
-import cv2
-cv2.imshow("Spatial Map", map_image)
-cv2.waitKey(0)
-```
-
-## Example: Mobile Robot with DPVO
+### Mobile Robot (DPVO + FK)
 
 ```python
 from spatial_context import SpatialContext
 from localization import Localization, load_camera_intrinsics
 
-# Initialize localization (for moving robot base)
-intrinsics = load_camera_intrinsics("external/DPVO/calib/camera.txt")
+# Initialize localization
+intrinsics = load_camera_intrinsics("external/DPVO/calib/iphone.txt")
 localizer = Localization(intrinsics, device="cuda:0")
-
-# Initialize spatial memory
 ctx = SpatialContext()
 
 # High-rate loop (30 Hz camera)
 for frame_idx, rgb_frame in enumerate(camera_stream):
     timestamp = frame_idx / 30.0
-
+    
     # Get robot base pose from DPVO
     robot_pose = localizer.update(rgb_frame, timestamp)
-
-    if robot_pose is None:  # Still initializing
-        continue
-
+    if robot_pose is None:
+        continue  # Still initializing
+    
     # Low-rate loop (1 Hz policy)
     if frame_idx % 30 == 0:
         joint_angles = robot.get_joint_angles()
-
-        # Add frame with mobile base pose
         frame_id = ctx.add_frame(joint_angles, robot_pose)
-
-        # Generate map
         map_image, colors = ctx.generate_map()
 ```
 
-## Key Concepts
+## Project Structure
 
-### Coordinate Frames
+```
+spatial-memer/
+├── src/
+│   ├── spatial_context.py   # Main API: pose storage, map generation, watermarking
+│   ├── robot_arm.py         # Forward kinematics via MuJoCo (FR3 Panda)
+│   ├── localization.py      # DPVO wrapper for visual odometry
+│   └── transforms.py        # SE(3) utilities (relative pose, quaternion, etc.)
+├── scripts/
+│   ├── setup_dpvo.sh        # DPVO installation script
+│   ├── test_pose.py         # Test forward kinematics
+│   ├── test_spatial_context.py  # Test map generation
+│   └── test_localization.py # Test DPVO integration
+├── fr3v2/                   # Franka FR3 robot model (MuJoCo XML + meshes)
+├── assets/                  # Test images/videos
+└── landing-page/            # Project website
+```
 
-1. **World Frame**: Origin at robot base (fixed)
-2. **Robot Frame**: Defined by forward kinematics chain
-3. **Camera Frame**: Computed from end-effector pose
+## API Reference
 
-All transformations use SE(3) 4×4 matrices for precision.
+### `SpatialContext`
 
-### Egocentric Mapping
+The main interface for spatial memory management.
 
-- Robot always at center (0, 0) of map
-- Forward direction marked with arrow
-- Keyframes positioned relative to current pose
-- Auto-scaling to fit all observations
-- Automatic outlier filtering (> 2σ)
+```python
+from spatial_context import SpatialContext, MapConfig
 
-### Visual Correspondence
+# Custom map configuration
+config = MapConfig(
+    image_size=512,          # Output map size (pixels)
+    keyframe_radius=16,      # Marker size
+    robot_radius=18,         # Robot marker size
+    outlier_std_threshold=2, # Outlier detection threshold
+)
 
-- 8-color palette for keyframes (cycles for > 8)
-- Watermarks in top-left of keyframe images
-- Numbered labels (1, 2, 3...) for easy reference
-- Intelligent overlap resolution
+ctx = SpatialContext(
+    relocalization=False,    # Not used (reserved for future)
+    map_config=config,
+    avoid_overlap=True       # Prevent marker overlap
+)
+```
+
+**Methods:**
+
+| Method | Description |
+|--------|-------------|
+| `add_frame(robot_state, robot_pose=None)` | Add frame, compute pose via FK. Returns `frame_id`. |
+| `add_frame_with_pose(pose)` | Add frame with pre-computed SE(3) pose (bypass FK). |
+| `promote_to_keyframe(frame_id)` | Promote a frame to keyframe status. |
+| `remove_keyframe(frame_id)` | Remove a keyframe. |
+| `generate_map()` | Generate egocentric BEV map. Returns `(image, colors_dict)`. |
+| `watermark_keyframes(keyframes, colors)` | Watermark keyframe images with colored markers. |
+| `get_current_pose()` | Get the most recent pose. |
+
+### `RobotArm`
+
+Forward kinematics for the Franka Emika Panda (FR3) using MuJoCo.
+
+```python
+from robot_arm import RobotArm
+
+arm = RobotArm()
+joint_angles = np.array([0.0, -0.5, 0.0, -2.0, 0.0, 1.5, 0.8])  # 7 joints
+ee_pose = arm.forward_kinematics(joint_angles)  # Returns 4x4 SE(3) matrix
+```
+
+### `Localization`
+
+Visual odometry for mobile robots using DPVO.
+
+```python
+from localization import Localization, load_camera_intrinsics
+
+# Load camera calibration (fx fy cx cy)
+intrinsics = load_camera_intrinsics("path/to/calib.txt")
+
+localizer = Localization(
+    camera_intrinsics=intrinsics,
+    camera_to_world=np.eye(4),  # Optional transform
+    weights_path="external/DPVO/dpvo.pth",
+    device="cuda:0"
+)
+
+# Process frame
+pose = localizer.update(rgb_image, timestamp)  # Returns 4x4 SE(3) or None
+
+# Get full trajectory
+trajectory = localizer.get_trajectory()  # Nx4x4 array
+```
 
 ## Testing
 
@@ -264,149 +210,82 @@ python scripts/test_pose.py
 # Test spatial context + map generation
 python scripts/test_spatial_context.py
 
-# Test DPVO integration (requires CUDA)
+# Test DPVO integration (requires CUDA + setup)
 python scripts/test_localization.py
-
-# Run DPVO on example video
-cd external/DPVO
-python demo.py --imagedir=../../assets/home_example.mp4 --calib=calib/iphone.txt --plot
 ```
 
-## Evaluation
+## How It Works
 
-We've designed a comprehensive evaluation suite with **10 task categories × 10 examples = 100 tests** to demonstrate that policies actually use spatial information:
+### Localization Pipeline
 
-**Example Tasks**:
+**Stationary robots** (arm clamped to table):
+```
+Joint Angles → Forward Kinematics → Camera Pose → Spatial Map
+   (7-DOF)         (MuJoCo)           (SE(3))      (BEV image)
+```
 
-1. **Occluded Object Retrieval**: "Get the cup" (cup out of view, must use spatial memory)
-2. **Relative Positioning**: "Move to the left of the block" (requires spatial reasoning)
-3. **Return to Location**: "Go back to where you saw the marker" (temporal spatial memory)
-4. **Spatial Sequencing**: "Visit locations A → B → C" (planning)
+**Mobile robots** (moving base):
+```
+RGB Frames → DPVO → Base Pose → Combined with FK → Spatial Map
+                    (15 Hz)
+```
 
-See **[EVALUATION.md](docs/EVALUATION.md)** for complete test suite design.
+### Map Generation
+
+1. **Pose storage**: All frames stored with their SE(3) camera pose
+2. **Relative positioning**: Keyframes positioned relative to current robot pose
+3. **Automatic scaling**: Map scales to fit all keyframes
+4. **Outlier handling**: Distant keyframes (>2σ) clamped to edge
+5. **Overlap resolution**: Spiral placement prevents marker collisions
+6. **Visual correspondence**: Colored numbered markers match watermarked keyframes
+
+<div align="center">
+  <img src="landing-page/public/data_collection.png" alt="Our data collection setup" width="280" />
+  <p><em>Our "robot" — a chest-mounted iPhone + wrist GoPro for data collection without hardware.</em></p>
+</div>
 
 ## Integration with MemER
 
 ```python
-# Existing MemER loop (simplified)
+# Existing MemER loop
 for timestep in episode:
     observation = env.get_observation()
-    action = policy(observation, memory)
-
-    # === ADD: Spatial-MemER (3 lines) ===
+    
+    # === ADD: Spatial-MemER ===
     frame_id = spatial_ctx.add_frame(robot.joint_angles)
     map_image, colors = spatial_ctx.generate_map()
-    watermarked_obs = spatial_ctx.watermark_keyframes([observation], colors)
+    watermarked = spatial_ctx.watermark_keyframes(keyframes, colors)
     # === END ===
-
-    # Policy now receives spatially-enhanced observations
-    action = policy(watermarked_obs, map_image, memory)
+    
+    # Policy now receives spatially-enhanced context
+    action = policy(watermarked, map_image, memory)
 ```
 
-## Implementation Status
+## Authors
 
-**Complete**:
-
-- Forward kinematics (7-DOF robot arm)
-- Pose tracking and storage
-- Egocentric BEV map generation
-- Keyframe watermarking with color coding
-- SE(3) coordinate transformations
-- DPVO integration for mobile robots
-- Comprehensive documentation
-
-**Next steps for this proj and research:**:
-
-- Integration with MemER codebase
-- Evaluation suite implementation (100 tests)
-- Real robot testing and validation
-- VLM fine-tuning experiments
-
-## Technical Highlights
-
-### Forward Kinematics
-
-- 7-DOF robot arm (e.g., Franka Panda)
-- DH parameter-based kinematic chain
-- Camera at end-effector
-- < 0.1° accuracy with precise actuators
-
-### Map Generation
-
-- Automatic scaling (fits all keyframes)
-- Outlier detection (> 2σ threshold)
-- Overlap resolution (spiral placement)
-- Configurable appearance (`MapConfig`)
-
-### Performance
-
-- Forward kinematics: < 0.1 ms
-- Map generation (10 keyframes): < 5 ms
-- Total overhead per policy iteration: < 10 ms
-- Easily supports 1 Hz policy loop
-
-## Use Cases
-
-1. **Long-horizon manipulation**: Track object locations across multi-step tasks
-2. **Spatial search**: "Find the blue ball" (avoid re-searching)
-3. **Navigation**: "Return to the start position"
-4. **Geometric reasoning**: "Place object between A and B"
-5. **Temporal tracking**: "Show me where the cup was 30 seconds ago"
-
-## Requirements
-
-- Python 3.8+
-- NumPy, OpenCV
-- PyTorch (for DPVO on mobile robots)
-- CUDA GPU (optional, for DPVO only)
-
-## Citation
-
-If you use Spatial-MemER in your research, please cite:
-
-```bibtex
-@software{spatial_memer_2026,
-  title = {Spatial-MemER: Spatial Memory for Embodied Robots},
-  author = {Music, Mark and Fonseca, Filippo},
-  year = {2026},
-  url = {https://github.com/yourusername/spatial-memer}
-}
-```
-
-This work extends [MemER: Memory-Enhanced Robot Policies](https://jen-pan.github.io/memer/):
-
-```bibtex
-@article{sridhar2024memer,
-  title = {MemER: Memory-Enhanced Robot Policies},
-  author = {Sridhar, Ajay and Pan, Jennifer and Sharma, Satvik and Finn, Chelsea},
-  year = {2024}
-}
-```
-
-## Acknowledgments
-
-This project builds on the MemER framework by Ajay Sridhar, Jennifer Pan, Satvik Sharma, and Chelsea Finn at Stanford. We extend their episodic memory approach with explicit spatial reasoning capabilities.
-
-## License
-
-Apache 2.0 License. See our LICENSE file for details. Quite standard.
-
-## Contact
-
-**Mark Music**
-Stanford University, Class of 2028
-[mmusic@stanford.edu](mailto:mmusic@stanford.edu) | [markmusic.io](https://markmusic.io)
-
-**Filippo Fonseca**
-Yale University, Class of 2028
-[filippo.fonseca@yale.edu](mailto:filippo.fonseca@yale.edu) | [filippofonseca.com](https://filippofonseca.com)
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="landing-page/public/mark.png" width="120" /><br />
+        <b>Mark Music</b><br />
+        Stanford '28<br />
+        CS (AI track) & Math<br />
+        <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
+      </td>
+      <td align="center">
+        <img src="landing-page/public/filippo.jpg" width="120" /><br />
+        <b>Filippo Fonseca</b><br />
+        Yale '28<br />
+        MechE (ABET) & EECS<br />
+        <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ---
 
-<div align="center">
+This project builds on the [MemER](https://arxiv.org/abs/2510.20328) framework by Ajay Sridhar, Jennifer Pan, Satvik Sharma, and Chelsea Finn at Stanford.
 
-**Made with ❤️ in Costa Rica 🇨🇷 for our inspiration: Chelsea Finn and her team @ Physical Intelligence, as well as the entire physical AI research community.**
-
-_Bridging AI and hardware to enable the future of robotics is a dream come true. If you have any questions, don't hesitate to reach out. We're always down for a chat._
-
-</div>
+Apache 2.0 License · Made with love in Costa Rica for the robot learning research community.
