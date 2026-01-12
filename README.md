@@ -2,7 +2,6 @@
   <img src="landing-page/public/map_example_anim.webp" alt="Egocentric map example" width="200" />
   <br />
   <br />
-  <br />
 </div>
 
 <div align="center">
