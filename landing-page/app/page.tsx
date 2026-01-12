@@ -293,7 +293,7 @@ function WhySection() {
           </ol>
 
           <p>
-            We wanted to give the policy explicit spatial context through an egocentric map — a direct 
+            We wanted to give the policy explicit spatial context through an egocentric map, a direct 
             visual representation of where keyframes were captured relative to the robot's current pose.{" "}
             <a
               href="#architecture"
