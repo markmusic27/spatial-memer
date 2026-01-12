@@ -304,7 +304,7 @@ function WhySection() {
           <p>
             <strong className="font-semibold text-[#1a1a1a]">This is a starting point.</strong> Explicit 
             maps are interpretable and easy to integrate, but we're ultimately interested in whether spatial 
-            context could be encoded implicitly — analogous to how positional embeddings like RoPE encode 
+            context could be encoded implicitly, analogous to how positional embeddings like RoPE encode 
             token position in text. Could we learn spatial encodings over visual tokens?
           </p>
         </div>
