@@ -603,7 +603,7 @@ function NextStepsSection() {
           </ol>
 
           <p>
-            <strong className="font-semibold text-[#1a1a1a]">Why IRIS.</strong> The MemER codebase isn't publicly available yet, and we don't have access to robot hardware. IRIS would give us both, along with collaborators who have deep experience in this space. We're excited to run the experiments above, but also to work with PhDs, postdocs, and other students on the broader question: <em>what does it take to give robots a sense of space?</em>
+            <strong className="font-semibold text-[#1a1a1a]">Next Steps.</strong> The MemER codebase isn't publicly available yet, and we don't have access to robot hardware, which limits how far we can push these ideas experimentally. We see Spatial-MemER as an initial exploration rather than a complete solution, and we're very open to collaborating with others interested in extending, evaluating, or stress-testing these ideas in more realistic robotic settings.
           </p>
         </div>
       </div>
