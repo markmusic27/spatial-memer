@@ -150,7 +150,7 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
           />
           <AuthorCard
             name="Filippo Fonseca"
-            imageUrl="https://media.licdn.com/dms/image/v2/D4E03AQEH1X4IRGyrFg/profile-displayphoto-scale_400_400/B4EZkh595hGYAg-/0/1757210469401?e=1769040000&v=beta&t=3ccs1IKb0FroocoUoj0fw-G53q4pp12148kShhGlH90"
+            imageUrl="/filippo_pfp.jpg"
             linkedInUrl="https://www.linkedin.com/in/filippo-fonseca/"
             school="Yale"
             schoolLogo="https://logos-world.net/wp-content/uploads/2021/11/Yale-Symbol.png"
