@@ -41,9 +41,11 @@ def main():
     map_resized = cv2.resize(map, (kf_h, kf_h))  # square map scaled to keyframe height
     
     combined = np.hstack([watermarked[0], map_resized])
-    cv2.imshow("Keyframe + Map", combined)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    
+    # Save to file (works on headless servers)
+    output_path = "results/test_spatial_context_output.png"
+    cv2.imwrite(output_path, combined)
+    print(f"Saved output to {output_path}")
 
     # print(f"\nAll poses: {list(ctx.all_poses.keys())}")
     # print(f"Keyframes: {list(ctx.keyframe_poses.keys())}")
