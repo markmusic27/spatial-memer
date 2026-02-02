@@ -3,9 +3,16 @@ name = "spatial-memer"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10,<3.11"
 dependencies = [
+    "isaacsim>=4.5.0.0",
+    "isaacsim-extscache-kit>=4.5.0.0",
+    "isaacsim-extscache-kit-sdk>=4.5.0.0",
+    "isaacsim-extscache-physics>=4.5.0.0",
     "mujoco>=3.4.0",
-    "numpy>=2.4.0",
+    "numpy>=1.23.5,<2.0.0",
+    "omnigibson>=1.1.1",
     "opencv-python>=4.11.0.86",
+    "scipy>=1.15.3",
+    "torch>=2.10.0",
 ]
