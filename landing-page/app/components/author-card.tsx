@@ -18,7 +18,13 @@ interface AuthorCardProps {
   major: string;
   websiteUrl?: string;
   githubUrl?: string;
+  role?: "lead" | "contributor";
 }
+
+const ROLE_LABELS: Record<NonNullable<AuthorCardProps["role"]>, string> = {
+  lead: "Project Lead",
+  contributor: "Contributor",
+};
 
 export const AuthorCard: React.FC<AuthorCardProps> = ({
   name,
@@ -30,6 +36,7 @@ export const AuthorCard: React.FC<AuthorCardProps> = ({
   major,
   websiteUrl,
   githubUrl,
+  role,
 }) => {
   const socialLinks: SocialLink[] = [];
   
@@ -59,6 +66,17 @@ export const AuthorCard: React.FC<AuthorCardProps> = ({
         <div className="text-[#1a1a1a] text-sm font-medium tracking-wide">
           {name}
         </div>
+        {role && (
+          <div
+            className={`mt-1 inline-block rounded-full px-2 py-px text-[9px] uppercase tracking-[0.08em] font-medium ${
+              role === "lead"
+                ? "bg-[#8c1515]/10 text-[#8c1515] border border-[#8c1515]/20"
+                : "bg-[#e3e1d6]/60 text-[#6a6a6a] border border-[#d8d6cb]"
+            }`}
+          >
+            {ROLE_LABELS[role]}
+          </div>
+        )}
         <div className="mt-2 flex flex-col items-center gap-1 text-xs text-[#6a6a6a]">
           <div className={`inline-flex items-center ${school === "Stanford" ? "gap-[10px]" : "gap-[2px]"}`}>
             <img
