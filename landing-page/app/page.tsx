@@ -142,9 +142,9 @@ function HeroSection({ linkRowRef }: HeroSectionProps) {
             imageUrl="/mark.png"
             linkedInUrl="https://www.linkedin.com/in/markmusic27/"
             school="Stanford"
-            schoolLogo="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Stanford_Cardinal_logo.svg/1341px-Stanford_Cardinal_logo.svg.png"
+            schoolLogo="/stanford.svg"
             schoolYear="28"
-            major="CS (AI track) + Math"
+            major="CS (AI track) + EE"
             websiteUrl="https://markmusic.io"
             githubUrl="https://github.com/markmusic27"
           />
