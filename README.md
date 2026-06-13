@@ -22,7 +22,28 @@
 
 MemER's keyframes capture *what* the robot saw — but not *where*. Spatial-MemER adds egocentric spatial context by computing camera poses via forward kinematics (stationary robots) or [DPVO](https://arxiv.org/abs/2208.04726) (mobile robots), rendered as a bird's-eye map that the high-level VLM policy can directly perceive.
 
+## Authors
 
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="landing-page/public/mark.png" width="120" /><br />
+        <b>Mark Music</b><br />
+        Stanford '28<br />
+        CS (AI track) & Math<br />
+        <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
+      </td>
+      <td align="center">
+        <img src="landing-page/public/filippo-pfp.png" width="120" /><br />
+        <b>Filippo Fonseca</b><br />
+        Yale '28<br />
+        MechE (ABET) & EECS<br />
+        <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Installation
 
@@ -259,29 +280,6 @@ for timestep in episode:
     # Policy now receives spatially-enhanced context
     action = policy(watermarked, map_image, memory)
 ```
-
-## Authors
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <img src="landing-page/public/mark.png" width="120" /><br />
-        <b>Mark Music</b><br />
-        Stanford '28<br />
-        CS (AI track) & Math<br />
-        <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
-      </td>
-      <td align="center">
-        <img src="landing-page/public/filippo-pfp.png" width="120" /><br />
-        <b>Filippo Fonseca</b><br />
-        Yale '28<br />
-        MechE (ABET) & EECS<br />
-        <a href="mailto:filippo.fonseca@yale.edu">filippo.fonseca@yale.edu</a>
-      </td>
-    </tr>
-  </table>
-</div>
 
 ---
 
