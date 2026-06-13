@@ -273,7 +273,7 @@ for timestep in episode:
         <a href="mailto:mmusic@stanford.edu">mmusic@stanford.edu</a>
       </td>
       <td align="center">
-        <img src="landing-page/public/filippo.jpg" width="120" /><br />
+        <img src="landing-page/public/filippo_pfp.jpg" width="120" /><br />
         <b>Filippo Fonseca</b><br />
         Yale '28<br />
         MechE (ABET) & EECS<br />
